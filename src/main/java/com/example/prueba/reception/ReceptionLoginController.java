@@ -25,17 +25,17 @@ public class ReceptionLoginController {
     public void LoginReceptionHome(ActionEvent actionEvent) throws IOException {
         String receptionUsername = receptionUsernameField.getText();
         currentReceptionUsername = receptionUsername;
-        String adminPassword = receptionPasswordField.getText();
-        System.out.println("3");
+        String receptionPassword = receptionPasswordField.getText();
+        System.out.println("gg");
         try {
             Connection connection = DBConnection.getConnections();
-            if (receptionUsername.isEmpty() || adminPassword.isEmpty() || Objects.equals(currentReceptionUsername, "")) {
+            if (receptionUsername.isEmpty() || receptionPassword.isEmpty() || Objects.equals(currentReceptionUsername, "")) {
                 CommonTask.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
                 String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, receptionUsername);
-                preparedStatement.setString(2, adminPassword);
+                preparedStatement.setString(2, receptionPassword);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     CommonTask.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");

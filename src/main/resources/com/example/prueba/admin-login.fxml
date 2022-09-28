@@ -16,6 +16,5 @@
    <TextField fx:id="adminUsernameField" promptText="Username" />
    <PasswordField fx:id="adminPasswordField" promptText="Password" />
 
-    <Label fx:id="welcomeText" />
     <Button alignment="CENTER" focusTraversable="false" onAction="#LoginAdminHome" text="Log in"/>
 </VBox>
