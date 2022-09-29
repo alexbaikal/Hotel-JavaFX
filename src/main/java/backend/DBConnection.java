@@ -24,18 +24,4 @@ public class DBConnection {
         return connection;
     }
 
-    public boolean checkConnections(){
-        return connection != null;
-    }
-
-    public static void closeConnections(){
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-    }
-
 }

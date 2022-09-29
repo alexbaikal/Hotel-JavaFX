@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Main extends Application {
-    public static double x, y;
     public static Stage stage;
     public static Scene scene;
 
@@ -15,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("panel-login.fxml"));
-        scene = new Scene(fxmlLoader.load(), 600, 400);
+        scene = new Scene(fxmlLoader.load(), 800, 400);
         stage.setTitle("Seleccionar tipo de usuario");
         stage.setScene(scene);
         stage.show();

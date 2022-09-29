@@ -16,7 +16,6 @@ import static com.example.prueba.Main.scene;
 
 public class PanelLoginController implements Initializable {
 
-    public BorderPane borderpane;
     public static ScreenController screenController;
 
     @Override

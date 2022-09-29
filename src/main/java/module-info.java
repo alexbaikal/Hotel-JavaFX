@@ -11,4 +11,7 @@ module com.example.prueba {
     opens com.example.prueba.admin to javafx.fxml;
     exports com.example.prueba.reception;
     opens com.example.prueba.reception to javafx.fxml;
+    opens com.example.prueba.models to javafx.fxml;
+    exports com.example.prueba.models;
+
 }
