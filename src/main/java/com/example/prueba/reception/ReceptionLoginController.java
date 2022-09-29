@@ -39,9 +39,9 @@ public class ReceptionLoginController {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     CommonTask.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
-                    PanelLoginController.screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "reception-dashboard.fxml" )));
                     PanelLoginController.screenController.removeScreen("receptionlogin");
                     PanelLoginController.screenController.activate("receptiondashboard");
+
 
                 } else {
                     CommonTask.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Incorrect NID or Password!");
