@@ -16,7 +16,7 @@ public class Main extends Application {
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("panel-login.fxml"));
         scene = new Scene(fxmlLoader.load(), 600, 400);
-        stage.setTitle("Hello!");
+        stage.setTitle("Seleccionar tipo de usuario");
         stage.setScene(scene);
         stage.show();
     }

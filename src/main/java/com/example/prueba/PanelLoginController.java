@@ -36,7 +36,6 @@ public class PanelLoginController implements Initializable {
     public void ReceptionLogin(ActionEvent actionEvent) throws IOException {
         screenController = new ScreenController(scene);
         screenController.addScreen("receptionlogin", FXMLLoader.load(getClass().getResource( "reception-login.fxml" )));
-        screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "reception-dashboard.fxml" )));
         screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "panel-login.fxml" )));
         screenController.activate("receptionlogin");
 

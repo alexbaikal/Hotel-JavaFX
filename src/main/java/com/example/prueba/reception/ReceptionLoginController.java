@@ -16,35 +16,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import static com.example.prueba.PanelLoginController.screenController;
+
 public class ReceptionLoginController {
     public TextField receptionUsernameField;
     public PasswordField receptionPasswordField;
 
-    public static String currentReceptionUsername;
+    public static String currentReceptionUsername = "";
 
     public void LoginReceptionHome(ActionEvent actionEvent) throws IOException {
         String receptionUsername = receptionUsernameField.getText();
         currentReceptionUsername = receptionUsername;
         String receptionPassword = receptionPasswordField.getText();
-        System.out.println("gg");
         try {
             Connection connection = DBConnection.getConnections();
             if (receptionUsername.isEmpty() || receptionPassword.isEmpty() || Objects.equals(currentReceptionUsername, "")) {
                 CommonTask.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
-                String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
+                String sql = "SELECT * FROM recepcionista WHERE username = ? AND password = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, receptionUsername);
                 preparedStatement.setString(2, receptionPassword);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     CommonTask.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
-                    PanelLoginController.screenController.removeScreen("receptionlogin");
-                    PanelLoginController.screenController.activate("receptiondashboard");
+                    screenController.removeScreen("receptionlogin");
+                    screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
+                    screenController.activate("receptiondashboard");
 
 
                 } else {
-                    CommonTask.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Incorrect NID or Password!");
+                    CommonTask.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Usuario o contraseña incorrectos!");
                 }
             }
         } catch (SQLException e) {
