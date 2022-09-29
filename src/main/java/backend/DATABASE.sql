@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2022 at 09:54 AM
+-- Generation Time: Sep 29, 2022 at 02:09 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -48,18 +48,22 @@ INSERT INTO `admin` (`id_admin`, `username`, `password`) VALUES
 
 CREATE TABLE `clientes` (
   `id_cliente` int(30) NOT NULL,
-  `DNI_cliente` varchar(40) COLLATE utf8_unicode_ci NOT NULL
+  `name_cliente` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `surname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `DNI_cliente` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `nationality_cliente` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `phone_cliente` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `email_cliente` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `occupation_cliente` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `civilstate_cliente` varchar(20) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `clientes`
 --
 
-INSERT INTO `clientes` (`id_cliente`, `DNI_cliente`) VALUES
-(1, '1'),
-(4, '4'),
-(5, 'a'),
-(6, 'Dhaka, Bangladesh');
+INSERT INTO `clientes` (`id_cliente`, `name_cliente`, `surname`, `DNI_cliente`, `nationality_cliente`, `phone_cliente`, `email_cliente`, `occupation_cliente`, `civilstate_cliente`) VALUES
+(1, 'Juanito', 'Vazquez Velazquez', 'E06362696', 'Hungria', '52363673', 'asgaehe@sdsdgsd.sdfg', 'Vacante libre', 'Soltero');
 
 -- --------------------------------------------------------
 
@@ -118,22 +122,27 @@ INSERT INTO `habitacion` (`id_habitacion`, `id_reserva`, `num_habitacion`, `plan
 
 CREATE TABLE `recepcionista` (
   `id_recepcionista` int(20) NOT NULL,
+  `name_recepcionisa` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `surname_recepcionista` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `DNI_recepcionista` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `usuario` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `contraseña` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL
+  `nationality_recepcionista` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone_recepcionista` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `email_recepcionista` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `recepcionista`
 --
 
-INSERT INTO `recepcionista` (`id_recepcionista`, `DNI_recepcionista`, `usuario`, `contraseña`) VALUES
-(1, '1', '1', '1'),
-(2, '111', '123', '1111'),
-(3, '2', '2', '2'),
-(4, '3', '3', '3'),
-(5, 'mursalin', 'Md. Mursalin', 'mursalin'),
-(6, 'rakib', 'rakib', 'rakib');
+INSERT INTO `recepcionista` (`id_recepcionista`, `name_recepcionisa`, `surname_recepcionista`, `DNI_recepcionista`, `nationality_recepcionista`, `phone_recepcionista`, `email_recepcionista`, `username`, `password`) VALUES
+(1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1'),
+(2, '', '', '111', '', '', '', '123', '1111'),
+(3, '', '', '2', '', '', '', '2', '2'),
+(4, '', '', '3', '', '', '', '3', '3'),
+(5, '', '', 'mursalin', '', '', '', 'Md. Mursalin', 'mursalin'),
+(6, '', '', 'rakib', '', '', '', 'rakib', 'rakib');
 
 -- --------------------------------------------------------
 
@@ -218,6 +227,7 @@ ALTER TABLE `recepcionista`
   ADD PRIMARY KEY (`id_recepcionista`),
   ADD UNIQUE KEY `DNI_recepcionista_2` (`DNI_recepcionista`),
   ADD UNIQUE KEY `DNI_recepcionista_3` (`DNI_recepcionista`),
+  ADD UNIQUE KEY `DNI_recepcionista_4` (`DNI_recepcionista`,`username`),
   ADD KEY `DNI_recepcionista` (`DNI_recepcionista`) USING BTREE;
 
 --
