@@ -49,7 +49,7 @@ public class ReceptionDashboardController implements Initializable {
 
     //client list
 
-    public ArrayList<ClientModel> clientList;
+    //public ArrayList<ClientModel> clientList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -78,7 +78,7 @@ public class ReceptionDashboardController implements Initializable {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                clientList.add(new ClientModel(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8), resultSet.getString(9)));
+                //clientList.add(new ClientModel(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8), resultSet.getString(9)));
             }
             connection.close();
 
