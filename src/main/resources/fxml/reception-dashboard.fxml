@@ -9,44 +9,41 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" prefHeight="400.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba.reception.ReceptionDashboardController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <Label fx:id="welcomeTxt" prefHeight="17.0" prefWidth="0.0" />
-      <Label text="Reception dashboard" />
-   <TabPane prefHeight="595.0" prefWidth="560.0" tabClosingPolicy="UNAVAILABLE">
-     <tabs>
-       <Tab text="Gestió clients">
-         <content>
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <children>
-                     <TableView fx:id="clientTable" prefHeight="200.0" prefWidth="760.0">
-                       <columns>
-                         <TableColumn fx:id="nameCol" prefWidth="75.0" text="Nom" />
-                         <TableColumn fx:id="surnameCol" prefWidth="75.0" text="Cognoms" />
-                           <TableColumn fx:id="dniCol" prefWidth="96.0" text="DNI" />
-                           <TableColumn fx:id="nationalityCol" prefWidth="105.0" text="Nacionalitat" />
-                           <TableColumn fx:id="phoneCol" prefWidth="99.0" text="Telèfon" />
-                           <TableColumn fx:id="emailCol" prefWidth="116.0" text="e-mail" />
-                           <TableColumn fx:id="occupationCol" prefWidth="99.0" text="Ocupació" />
-                           <TableColumn fx:id="civilStateCol" prefWidth="94.0" text="Estat civil" />
-                       </columns>
-                     </TableView>
-                  </children>
-               </AnchorPane>
-         </content>
-       </Tab>
-       <Tab text="Reserva d'habitacions">
-         <content>
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-         </content>
-       </Tab>
-     </tabs>
-   </TabPane>
-    <ButtonBar prefHeight="40.0" prefWidth="200.0" />
+   <Label fx:id="welcomeTxt" prefHeight="17.0" />
+      <Label text="Panel recepción" />
+    <TabPane prefHeight="273.0" prefWidth="760.0" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Gestió clients">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TableView fx:id="clientTable" prefHeight="147.0" prefWidth="760.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                        <TableColumn fx:id="nameCol" prefWidth="75.0" text="Nom" />
+                        <TableColumn fx:id="surnameCol" prefWidth="75.0" text="Cognoms" />
+                        <TableColumn fx:id="dniCol" prefWidth="96.0" text="DNI" />
+                        <TableColumn fx:id="nationalityCol" prefWidth="105.0" text="Nacionalitat" />
+                        <TableColumn fx:id="phoneCol" prefWidth="99.0" text="Telèfon" />
+                        <TableColumn fx:id="emailCol" prefWidth="116.0" text="e-mail" />
+                        <TableColumn fx:id="occupationCol" prefWidth="99.0" text="Ocupació" />
+                        <TableColumn fx:id="civilStateCol" prefWidth="94.0" text="Estat civil" />
+                    </columns>
+                </TableView>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Reserva d'habitacions">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </Tab>
+    </TabPane>
+    <FlowPane>
+        <Button mnemonicParsing="false" onAction="#LogOut" text="Añadir cliente"/>
+        <Button mnemonicParsing="false" onAction="#LogOut" text="Añadir habitación"/>
 
-    <Button mnemonicParsing="false" onAction="#LogOut" text="Log out" />
+        <Button mnemonicParsing="false" onAction="#LogOut" text="Cerrar sesión"/>
+    </FlowPane>
+    <ButtonBar prefHeight="40.0" prefWidth="200.0" />
 </VBox>

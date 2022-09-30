@@ -2,15 +2,15 @@ package com.example.prueba.reception;
 
 import backend.CommonTask;
 import backend.DBConnection;
-import com.example.prueba.Main;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import org.w3c.dom.Text;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -18,10 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
-
 import static com.example.prueba.Main.stage;
 import static com.example.prueba.reception.ReceptionLoginController.currentReceptionUsername;
 
@@ -48,12 +45,11 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn<String, String> civilStateCol;
 
     //client list
-
-    //public ArrayList<ClientModel> clientList;
+    public ArrayList<ClientModel> clientList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        stage.setTitle("Reception Dashboard");
+        stage.setTitle("Panel recepción");
 
         try {
             Connection connection = DBConnection.getConnections();
@@ -63,8 +59,7 @@ public class ReceptionDashboardController implements Initializable {
                 preparedStatement.setString(1, currentReceptionUsername);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    //system out all the columns of resultSet
-                    CommonTask.showAlert(Alert.AlertType.INFORMATION, "Bienvenido", resultSet.getString(2));
+                    //re-validate welcomeTxt so it will resize the label
                     welcomeTxt.setText("Bienvenido " + resultSet.getString(2));
 
                 } else {
@@ -77,8 +72,10 @@ public class ReceptionDashboardController implements Initializable {
             String sql = "SELECT * FROM clientes";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
+            clientList = new ArrayList<>();
             while (resultSet.next()) {
-                //clientList.add(new ClientModel(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8), resultSet.getString(9)));
+                ClientModel clientModel = new ClientModel(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8), resultSet.getString(9));
+                clientList.add(clientModel);
             }
             connection.close();
 
@@ -86,7 +83,56 @@ public class ReceptionDashboardController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        nameCol.setCellValueFactory(c -> new SimpleStringProperty("123"));
+        System.out.println(clientList.size());
+
+        if (clientList != null) {
+                for (ClientModel client : clientList) {
+                    nameCol.setCellValueFactory(c -> new SimpleStringProperty(client.getName()));
+                    surnameCol.setCellValueFactory(c -> new SimpleStringProperty(client.getSurname()));
+                    dniCol.setCellValueFactory(c -> new SimpleStringProperty(client.getDni()));
+                    nationalityCol.setCellValueFactory(c -> new SimpleStringProperty(client.getNationality()));
+                    phoneCol.setCellValueFactory(c -> new SimpleStringProperty(client.getPhone()));
+                    emailCol.setCellValueFactory(c -> new SimpleStringProperty(client.getEmail()));
+                    occupationCol.setCellValueFactory(c -> new SimpleStringProperty(client.getOccupation()));
+                    civilStateCol.setCellValueFactory(c -> new SimpleStringProperty(client.getCivilState()));
+                    //add an edit button column to the table
+                    TableColumn<String, Void> colBtn = new TableColumn<>("Button Column");
+
+
+                    Callback<TableColumn<String, Void>, TableCell<String, Void>> cellFactory = new Callback<>() {
+                        @Override
+                        public TableCell<String, Void> call(final TableColumn<String, Void> param) {
+                            return new TableCell<>() {
+
+                                private final Button btn = new Button("Editar");
+
+                                {
+                                    btn.setOnAction((ActionEvent event) -> {
+                                        String data = getTableView().getItems().get(getIndex());
+                                        System.out.println("selectedData: " + client.getId());
+                                    });
+                                }
+
+                                @Override
+                                public void updateItem(Void item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                    } else {
+                                        setGraphic(btn);
+                                    }
+                                }
+                            };
+                        }
+                    };
+
+                    colBtn.setCellFactory(cellFactory);
+
+                    clientTable.getColumns().add(colBtn);
+                }
+            }
+        clientTable.getItems().add("");
+
 
 
 
@@ -99,7 +145,7 @@ public class ReceptionDashboardController implements Initializable {
         PanelLoginController.screenController.removeScreen("receptionlogin");
         PanelLoginController.screenController.activate("panellogin");
     }
-    public void closeApplication(MouseEvent mouseEvent) {
-        System.exit(0);
-    }
+
+
 }
+
