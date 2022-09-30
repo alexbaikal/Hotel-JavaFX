@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static com.example.prueba.Main.scene;
+import static com.example.prueba.Main.stage;
 
 public class PanelLoginController implements Initializable {
 
@@ -34,8 +35,10 @@ public class PanelLoginController implements Initializable {
 
     public void ReceptionLogin(ActionEvent actionEvent) throws IOException {
         screenController = new ScreenController(scene);
-        screenController.addScreen("receptionlogin", FXMLLoader.load(getClass().getResource( "reception-login.fxml" )));
-        screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "panel-login.fxml" )));
+        screenController.addScreen("receptionlogin", FXMLLoader.load(getClass().getResource( "/fxml/reception-login.fxml" )));
+        screenController.addScreen("panellogin", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("panel-login.fxml"))));
+        stage.setWidth(200);
+        stage.setHeight(400);
         screenController.activate("receptionlogin");
 
     }

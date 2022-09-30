@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import static com.example.prueba.Main.stage;
 import static com.example.prueba.PanelLoginController.screenController;
 
 public class ReceptionLoginController {
@@ -41,6 +42,8 @@ public class ReceptionLoginController {
                 if (resultSet.next()) {
                     CommonTask.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
                     screenController.removeScreen("receptionlogin");
+                    stage.setWidth(1000);
+                    stage.setHeight(500);
                     screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
                     screenController.activate("receptiondashboard");
 
@@ -52,5 +55,11 @@ public class ReceptionLoginController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void RegisterReception() throws IOException {
+        screenController.removeScreen("receptionlogin");
+        screenController.addScreen("receptionregister", FXMLLoader.load(getClass().getResource( "/fxml/reception-register.fxml" )));
+        screenController.activate("receptionregister");
     }
 }

@@ -4,14 +4,15 @@ import backend.CommonTask;
 import backend.DBConnection;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +27,7 @@ public class ReceptionDashboardController implements Initializable {
 
     public Label welcomeTxt;
     @FXML
-    private TableView<String> clientTable;
+    private TableView<ClientModel> clientTable;
     @FXML
     private TableColumn<String, String> nameCol;
     @FXML
@@ -43,6 +44,10 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn<String, String> occupationCol;
     @FXML
     private TableColumn<String, String> civilStateCol;
+    @FXML
+    private TableColumn <ClientModel, Void> editCol;
+    @FXML
+    private TableColumn <ClientModel, Void> deleteCol;
 
     //client list
     public ArrayList<ClientModel> clientList;
@@ -86,57 +91,103 @@ public class ReceptionDashboardController implements Initializable {
         System.out.println(clientList.size());
 
         if (clientList != null) {
-                for (ClientModel client : clientList) {
-                    nameCol.setCellValueFactory(c -> new SimpleStringProperty(client.getName()));
-                    surnameCol.setCellValueFactory(c -> new SimpleStringProperty(client.getSurname()));
-                    dniCol.setCellValueFactory(c -> new SimpleStringProperty(client.getDni()));
-                    nationalityCol.setCellValueFactory(c -> new SimpleStringProperty(client.getNationality()));
-                    phoneCol.setCellValueFactory(c -> new SimpleStringProperty(client.getPhone()));
-                    emailCol.setCellValueFactory(c -> new SimpleStringProperty(client.getEmail()));
-                    occupationCol.setCellValueFactory(c -> new SimpleStringProperty(client.getOccupation()));
-                    civilStateCol.setCellValueFactory(c -> new SimpleStringProperty(client.getCivilState()));
-                    //add an edit button column to the table
-                    TableColumn<String, Void> colBtn = new TableColumn<>("Button Column");
+            for (ClientModel client : clientList) {
+                System.out.println(client.getName());
 
+                //the above code only adds the last data of the list to the table
+                //to solve the problem, we need to add the data to the table in the loop
 
-                    Callback<TableColumn<String, Void>, TableCell<String, Void>> cellFactory = new Callback<>() {
-                        @Override
-                        public TableCell<String, Void> call(final TableColumn<String, Void> param) {
-                            return new TableCell<>() {
+                nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+                surnameCol.setCellValueFactory(new PropertyValueFactory<>("surname"));
+                dniCol.setCellValueFactory(new PropertyValueFactory<>("dni"));
+                nationalityCol.setCellValueFactory(new PropertyValueFactory<>("nationality"));
+                phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+                emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+                occupationCol.setCellValueFactory(new PropertyValueFactory<>("occupation"));
+                civilStateCol.setCellValueFactory(new PropertyValueFactory<>("civilState"));
 
-                                private final Button btn = new Button("Editar");
+                //add edit button to the editCol column
+                editCol.setCellFactory(new Callback<>() {
+                    @Override
+                    public TableCell<ClientModel, Void> call(final TableColumn<ClientModel, Void> param) {
+                        return new TableCell<>() {
 
-                                {
-                                    btn.setOnAction((ActionEvent event) -> {
-                                        String data = getTableView().getItems().get(getIndex());
-                                        System.out.println("selectedData: " + client.getId());
-                                    });
+                            private final Button btn = new Button("Editar");
+
+                            {
+                                btn.setOnAction((ActionEvent event) -> {
+                                    ClientModel data = getTableView().getItems().get(getIndex());
+                                    System.out.println("selectedData: " + data.getId());
+                                    //   try {
+                                    //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reception/clientEdit.fxml"));
+                                    // stage.getScene().setRoot(loader.load());
+                                    //   ClientEditController clientEditController = loader.getController();
+                                    //  clientEditController.setClient(data);
+                                    //      } catch (IOException e) {
+                                    //      e.printStackTrace();
+                                    //    }
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(btn);
                                 }
+                            }
+                        };
+                    }
+                });
 
-                                @Override
-                                public void updateItem(Void item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    if (empty) {
-                                        setGraphic(null);
-                                    } else {
-                                        setGraphic(btn);
-                                    }
+                //add delete button to the deleteCol column
+
+                deleteCol.setCellFactory(new Callback<>() {
+                    @Override
+                    public TableCell<ClientModel, Void> call(final TableColumn<ClientModel, Void> param) {
+                        return new TableCell<>() {
+
+                            private final Button btn = new Button("Eliminar");
+
+                            {
+                                btn.setOnAction((ActionEvent event) -> {
+                                    ClientModel data = getTableView().getItems().get(getIndex());
+                                    System.out.println("selectedData: " + data.getId());
+                                    //   try {
+                                    //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reception/clientEdit.fxml"));
+                                    // stage.getScene().setRoot(loader.load());
+                                    //   ClientEditController clientEditController = loader.getController();
+                                    //  clientEditController.setClient(data);
+                                    //      } catch (IOException e) {
+                                    //      e.printStackTrace();
+                                    //    }
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(btn);
                                 }
-                            };
-                        }
-                    };
+                            }
+                        };
+                    }
+                });
 
-                    colBtn.setCellFactory(cellFactory);
+                clientTable.getItems().add(client);
 
-                    clientTable.getColumns().add(colBtn);
-                }
             }
-        clientTable.getItems().add("");
 
 
-
+        }
 
     }
+
 
     public void LogOut() {
         currentReceptionUsername = "";
@@ -144,6 +195,13 @@ public class ReceptionDashboardController implements Initializable {
         PanelLoginController.screenController.removeScreen("receptiondashboard");
         PanelLoginController.screenController.removeScreen("receptionlogin");
         PanelLoginController.screenController.activate("panellogin");
+    }
+
+    public void AddClient() throws IOException {
+        stage.setTitle("Añadir cliente");
+        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(getClass().getResource("/fxml/reception-addclient.fxml")));
+        PanelLoginController.screenController.removeScreen("receptiondashboard");
+        PanelLoginController.screenController.activate("receptionaddclient");
     }
 
 
