@@ -1,6 +1,6 @@
 package com.example.prueba.reception;
 
-import backend.CommonTask;
+import backend.Utils;
 import backend.DBConnection;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
@@ -68,7 +68,7 @@ public class ReceptionDashboardController implements Initializable {
                     welcomeTxt.setText("Bienvenido " + resultSet.getString(2));
 
                 } else {
-                    CommonTask.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Incorrect NID or Password!");
+                    Utils.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Incorrect NID or Password!");
                     PanelLoginController.screenController.removeScreen("receptionlogin");
                     PanelLoginController.screenController.activate("receptionlogin");
                 }

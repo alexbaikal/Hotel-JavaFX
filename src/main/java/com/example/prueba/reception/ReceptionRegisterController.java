@@ -1,8 +1,7 @@
 package com.example.prueba.reception;
 
-import backend.CommonTask;
+import backend.Utils;
 import backend.DBConnection;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -12,7 +11,6 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -53,9 +51,9 @@ public class ReceptionRegisterController {
         try {
             Connection connection = DBConnection.getConnections();
             if (receptionUsername.isEmpty() || receptionPassword.isEmpty() || Objects.equals(currentReceptionUsername, "") || nameReception.isEmpty() || surnameReception.isEmpty() || phoneReception.isEmpty() || emailReception.isEmpty() || dniReception.isEmpty() || nationalityReception.isEmpty()) {
-                CommonTask.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
+                Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else if (receptionPassword.length() <6) {
-                CommonTask.showAlert(Alert.AlertType.WARNING, "Error", "Contraseña menor de 6 caracteres!");
+                Utils.showAlert(Alert.AlertType.WARNING, "Error", "Contraseña menor de 6 caracteres!");
             } else {
                 String sql = "INSERT INTO `recepcionista`(" +
                         "name_recepcionisa," +
@@ -79,7 +77,7 @@ public class ReceptionRegisterController {
                 preparedStatement.setInt(9, 0);
                 try {
                     preparedStatement.executeUpdate();
-                    CommonTask.showAlert(Alert.AlertType.INFORMATION, "Dado de alta correctamente!", "Espera de alta recepcionista");
+                    Utils.showAlert(Alert.AlertType.INFORMATION, "Dado de alta correctamente!", "Espera de alta recepcionista");
                     screenController.removeScreen("receptionregister");
                     stage.setWidth(400);
                     stage.setHeight(450);
@@ -87,7 +85,7 @@ public class ReceptionRegisterController {
                     screenController.activate("receptionlogin");
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    CommonTask.showAlert(Alert.AlertType.ERROR, "Fallo de alta!", "Hubo un error en la base de datos!");
+                    Utils.showAlert(Alert.AlertType.ERROR, "Fallo de alta!", "Hubo un error en la base de datos!");
                 }
 
 

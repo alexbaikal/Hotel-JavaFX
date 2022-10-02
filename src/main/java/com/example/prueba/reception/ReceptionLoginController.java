@@ -1,9 +1,7 @@
 package com.example.prueba.reception;
 
-import backend.CommonTask;
+import backend.Utils;
 import backend.DBConnection;
-import com.example.prueba.PanelLoginController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
@@ -32,7 +30,7 @@ public class ReceptionLoginController {
         try {
             Connection connection = DBConnection.getConnections();
             if (receptionUsername.isEmpty() || receptionPassword.isEmpty() || Objects.equals(currentReceptionUsername, "")) {
-                CommonTask.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
+                Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
                 String sql = "SELECT * FROM recepcionista WHERE username = ? AND password = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -40,7 +38,7 @@ public class ReceptionLoginController {
                 preparedStatement.setString(2, receptionPassword);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    CommonTask.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
+                    Utils.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
                     screenController.removeScreen("receptionlogin");
                     stage.setWidth(1000);
                     stage.setHeight(500);
@@ -49,7 +47,7 @@ public class ReceptionLoginController {
 
 
                 } else {
-                    CommonTask.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Usuario o contraseña incorrectos!");
+                    Utils.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Usuario o contraseña incorrectos!");
                 }
             }
         } catch (SQLException e) {
