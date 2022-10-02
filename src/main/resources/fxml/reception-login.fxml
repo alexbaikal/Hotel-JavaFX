@@ -38,4 +38,5 @@
          <Font size="25.0" />
       </font>
    </Button>
+   <Button mnemonicParsing="false" onAction="#GoBack" style="-fx-background-color: #059cfa;" text="Atrás" />
 </VBox>

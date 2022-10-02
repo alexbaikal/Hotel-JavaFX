@@ -94,8 +94,6 @@ public class ReceptionDashboardController implements Initializable {
             for (ClientModel client : clientList) {
                 System.out.println(client.getName());
 
-                //the above code only adds the last data of the list to the table
-                //to solve the problem, we need to add the data to the table in the loop
 
                 nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
                 surnameCol.setCellValueFactory(new PropertyValueFactory<>("surname"));
@@ -194,6 +192,8 @@ public class ReceptionDashboardController implements Initializable {
         stage.setTitle("Panel Login");
         PanelLoginController.screenController.removeScreen("receptiondashboard");
         PanelLoginController.screenController.removeScreen("receptionlogin");
+        stage.setWidth(400);
+        stage.setHeight(400);
         PanelLoginController.screenController.activate("panellogin");
     }
 

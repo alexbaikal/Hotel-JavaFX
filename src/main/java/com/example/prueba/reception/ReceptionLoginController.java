@@ -25,7 +25,7 @@ public class ReceptionLoginController {
 
     public static String currentReceptionUsername = "";
 
-    public void LoginReceptionHome(ActionEvent actionEvent) throws IOException {
+    public void LoginReceptionHome() throws IOException {
         String receptionUsername = receptionUsernameField.getText();
         currentReceptionUsername = receptionUsername;
         String receptionPassword = receptionPasswordField.getText();
@@ -59,7 +59,18 @@ public class ReceptionLoginController {
 
     public void RegisterReception() throws IOException {
         screenController.removeScreen("receptionlogin");
+        stage.setWidth(1000);
+        stage.setHeight(500);
+        stage.setTitle("Alta de recepcionista");
         screenController.addScreen("receptionregister", FXMLLoader.load(getClass().getResource( "/fxml/reception-register.fxml" )));
         screenController.activate("receptionregister");
+    }
+
+    public void GoBack() throws IOException {
+        screenController.removeScreen("receptionlogin");
+        stage.setWidth(400);
+        stage.setHeight(400);
+        screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "/fxml/panel-login.fxml" )));
+        screenController.activate("panellogin");
     }
 }

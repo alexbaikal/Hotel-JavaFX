@@ -43,7 +43,7 @@
     </TabPane>
     <FlowPane>
         <Button mnemonicParsing="false" onAction="#AddClient" text="Añadir cliente"/>
-        <Button mnemonicParsing="false" text="Añadir habitación"/>
+        <Button mnemonicParsing="false" onAction="#LogOut" text="Añadir habitación"/>
 
         <Button mnemonicParsing="false" onAction="#LogOut" text="Cerrar sesión"/>
     </FlowPane>
