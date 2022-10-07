@@ -66,7 +66,7 @@ public class ReceptionLoginController {
 
     public void GoBack() throws IOException {
         screenController.removeScreen("receptionlogin");
-        stage.setWidth(400);
+        stage.setWidth(500);
         stage.setHeight(400);
         screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "/fxml/panel-login.fxml" )));
         screenController.activate("panellogin");

@@ -1,7 +1,5 @@
 package com.example.prueba.reception;
 
-import backend.Utils;
-import backend.DBConnection;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
 import javafx.event.ActionEvent;
@@ -14,18 +12,18 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import static com.example.prueba.Main.stage;
+import static com.example.prueba.admin.AdminDashboardController.connection;
 import static com.example.prueba.reception.ReceptionLoginController.currentReceptionUsername;
 
 public class ReceptionDashboardController implements Initializable {
 
-    public Label welcomeTxt;
     @FXML
     private TableView<ClientModel> clientTable;
     @FXML
@@ -57,32 +55,17 @@ public class ReceptionDashboardController implements Initializable {
         stage.setTitle("Panel recepción");
 
         try {
-            Connection connection = DBConnection.getConnections();
-            if (!currentReceptionUsername.isEmpty()) {
-                String sql = "SELECT * FROM recepcionista WHERE username = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, currentReceptionUsername);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    //re-validate welcomeTxt so it will resize the label
-                    welcomeTxt.setText("Bienvenido " + resultSet.getString(2));
-
-                } else {
-                    Utils.showAlert(Alert.AlertType.ERROR, "Login Failed!", "Incorrect NID or Password!");
-                    PanelLoginController.screenController.removeScreen("receptionlogin");
-                    PanelLoginController.screenController.activate("receptionlogin");
-                }
-            }
+            connection();
 
             String sql = "SELECT * FROM clientes";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection().prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             clientList = new ArrayList<>();
             while (resultSet.next()) {
                 ClientModel clientModel = new ClientModel(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8), resultSet.getString(9));
                 clientList.add(clientModel);
             }
-            connection.close();
+            connection().close();
 
 
         } catch (SQLException e) {
@@ -116,14 +99,6 @@ public class ReceptionDashboardController implements Initializable {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ClientModel data = getTableView().getItems().get(getIndex());
                                     System.out.println("selectedData: " + data.getId());
-                                    //   try {
-                                    //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reception/clientEdit.fxml"));
-                                    // stage.getScene().setRoot(loader.load());
-                                    //   ClientEditController clientEditController = loader.getController();
-                                    //  clientEditController.setClient(data);
-                                    //      } catch (IOException e) {
-                                    //      e.printStackTrace();
-                                    //    }
                                 });
                             }
 
@@ -153,14 +128,6 @@ public class ReceptionDashboardController implements Initializable {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ClientModel data = getTableView().getItems().get(getIndex());
                                     System.out.println("selectedData: " + data.getId());
-                                    //   try {
-                                    //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reception/clientEdit.fxml"));
-                                    // stage.getScene().setRoot(loader.load());
-                                    //   ClientEditController clientEditController = loader.getController();
-                                    //  clientEditController.setClient(data);
-                                    //      } catch (IOException e) {
-                                    //      e.printStackTrace();
-                                    //    }
                                 });
                             }
 
@@ -199,7 +166,7 @@ public class ReceptionDashboardController implements Initializable {
 
     public void AddClient() throws IOException {
         stage.setTitle("Añadir cliente");
-        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(getClass().getResource("/fxml/reception-addclient.fxml")));
+        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
         PanelLoginController.screenController.removeScreen("receptiondashboard");
         PanelLoginController.screenController.activate("receptionaddclient");
     }

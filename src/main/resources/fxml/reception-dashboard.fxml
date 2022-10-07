@@ -16,7 +16,6 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <Label fx:id="welcomeTxt" prefHeight="17.0" />
       <Label text="Panel recepción" />
     <TabPane prefHeight="273.0" prefWidth="760.0" tabClosingPolicy="UNAVAILABLE">
         <Tab text="Gestió clients">

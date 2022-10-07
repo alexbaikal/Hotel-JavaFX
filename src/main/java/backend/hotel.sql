@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Время создания: Окт 02 2022 г., 21:11
--- Версия сервера: 10.4.24-MariaDB
--- Версия PHP: 7.4.28
+-- Host: 127.0.0.1
+-- Generation Time: Oct 07, 2022 at 02:10 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `hotel`
+-- Database: `hotel`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `admin`
+-- Table structure for table `admin`
 --
 
 CREATE TABLE `admin` (
@@ -34,7 +34,7 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `admin`
+-- Dumping data for table `admin`
 --
 
 INSERT INTO `admin` (`id_admin`, `username`, `password`) VALUES
@@ -43,7 +43,7 @@ INSERT INTO `admin` (`id_admin`, `username`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `clientes`
+-- Table structure for table `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -59,7 +59,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `clientes`
+-- Dumping data for table `clientes`
 --
 
 INSERT INTO `clientes` (`id_cliente`, `name_cliente`, `surname_cliente`, `DNI_cliente`, `nationality_cliente`, `phone_cliente`, `email_cliente`, `occupation_cliente`, `civilstate_cliente`) VALUES
@@ -70,7 +70,7 @@ INSERT INTO `clientes` (`id_cliente`, `name_cliente`, `surname_cliente`, `DNI_cl
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `contacto`
+-- Table structure for table `contacto`
 --
 
 CREATE TABLE `contacto` (
@@ -87,7 +87,7 @@ CREATE TABLE `contacto` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `habitacion`
+-- Table structure for table `habitacion`
 --
 
 CREATE TABLE `habitacion` (
@@ -101,7 +101,7 @@ CREATE TABLE `habitacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `habitacion`
+-- Dumping data for table `habitacion`
 --
 
 INSERT INTO `habitacion` (`id_habitacion`, `id_reserva`, `num_habitacion`, `planta`, `disponibilidad`, `tipo`, `caracteristicas`) VALUES
@@ -119,7 +119,7 @@ INSERT INTO `habitacion` (`id_habitacion`, `id_reserva`, `num_habitacion`, `plan
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `recepcionista`
+-- Table structure for table `recepcionista`
 --
 
 CREATE TABLE `recepcionista` (
@@ -136,22 +136,16 @@ CREATE TABLE `recepcionista` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `recepcionista`
+-- Dumping data for table `recepcionista`
 --
 
 INSERT INTO `recepcionista` (`id_recepcionista`, `name_recepcionisa`, `surname_recepcionista`, `DNI_recepcionista`, `nationality_recepcionista`, `phone_recepcionista`, `email_recepcionista`, `username`, `password`, `active_recepcionista`) VALUES
-(1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1', 0),
-(2, '', '', '111', '', '', '', '123', '1111', 0),
-(3, '', '', '2', '', '', '', '2', '2', 0),
-(4, '', '', '3', '', '', '', '3', '3', 0),
-(5, '', '', 'mursalin', '', '', '', 'Md. Mursalin', 'mursalin', 0),
-(6, '', '', 'rakib', '', '', '', 'rakib', 'rakib', 0),
-(7, 'dggddg', 'dggddg', 'dgdgdgdg', 'dgdgdgdg', 'dgdgdg', 'gddgdgdg', 'adfsdg', 'dgddgtdg', 0);
+(1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1', 1);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `reserva`
+-- Table structure for table `reserva`
 --
 
 CREATE TABLE `reserva` (
@@ -164,7 +158,7 @@ CREATE TABLE `reserva` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `reserva`
+-- Dumping data for table `reserva`
 --
 
 INSERT INTO `reserva` (`id_reserva`, `dni_cliente`, `id_recepcionista`, `id_habitacion`, `fecha_inicio`, `fecha_final`) VALUES
@@ -195,37 +189,37 @@ INSERT INTO `reserva` (`id_reserva`, `dni_cliente`, `id_recepcionista`, `id_habi
 (40, 'mursalin', 0, 0, 0, 0);
 
 --
--- Индексы сохранённых таблиц
+-- Indexes for dumped tables
 --
 
 --
--- Индексы таблицы `admin`
+-- Indexes for table `admin`
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id_admin`);
 
 --
--- Индексы таблицы `clientes`
+-- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `DNI_cliente` (`DNI_cliente`) USING BTREE;
 
 --
--- Индексы таблицы `contacto`
+-- Indexes for table `contacto`
 --
 ALTER TABLE `contacto`
   ADD UNIQUE KEY `DNI` (`DNI`) USING BTREE;
 
 --
--- Индексы таблицы `habitacion`
+-- Indexes for table `habitacion`
 --
 ALTER TABLE `habitacion`
   ADD PRIMARY KEY (`id_habitacion`),
   ADD KEY `id_reserva` (`id_reserva`);
 
 --
--- Индексы таблицы `recepcionista`
+-- Indexes for table `recepcionista`
 --
 ALTER TABLE `recepcionista`
   ADD PRIMARY KEY (`id_recepcionista`),
@@ -235,7 +229,7 @@ ALTER TABLE `recepcionista`
   ADD KEY `DNI_recepcionista` (`DNI_recepcionista`) USING BTREE;
 
 --
--- Индексы таблицы `reserva`
+-- Indexes for table `reserva`
 --
 ALTER TABLE `reserva`
   ADD PRIMARY KEY (`id_reserva`),
@@ -244,35 +238,35 @@ ALTER TABLE `reserva`
   ADD KEY `id_habitacion` (`id_habitacion`);
 
 --
--- AUTO_INCREMENT для сохранённых таблиц
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT для таблицы `admin`
+-- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
   MODIFY `id_admin` int(25) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
--- AUTO_INCREMENT для таблицы `clientes`
+-- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `id_cliente` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT для таблицы `habitacion`
+-- AUTO_INCREMENT for table `habitacion`
 --
 ALTER TABLE `habitacion`
   MODIFY `id_habitacion` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1112;
 
 --
--- AUTO_INCREMENT для таблицы `recepcionista`
+-- AUTO_INCREMENT for table `recepcionista`
 --
 ALTER TABLE `recepcionista`
   MODIFY `id_recepcionista` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT для таблицы `reserva`
+-- AUTO_INCREMENT for table `reserva`
 --
 ALTER TABLE `reserva`
   MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
