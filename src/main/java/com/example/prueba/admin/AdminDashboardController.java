@@ -4,19 +4,23 @@ import backend.DBConnection;
 import backend.Utils;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ReceptionModel;
+import com.example.prueba.models.RoomModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static com.example.prueba.Main.stage;
@@ -46,10 +50,170 @@ public class AdminDashboardController implements Initializable {
     //receptionist list
     public ArrayList<ReceptionModel> receptionList;
 
+
+    @FXML
+    private TableView<RoomModel> roomsTable;
+    @FXML
+    private TableColumn<String, String> numCol;
+    @FXML
+    private TableColumn<String, String> floorCol;
+    @FXML
+    private TableColumn<String, String> availabilityCol;
+    @FXML
+    private TableColumn<String, String> typeCol;
+    @FXML
+    private TableColumn<String, String> priceCol;
+    @FXML
+    private TableColumn<String, String> characteristicsCol;
+    @FXML
+    private TableColumn <RoomModel, Void> editRoomCol;
+    @FXML
+    private TableColumn <RoomModel, Void> deleteRoomCol;
+    //receptionist list
+    public ArrayList<RoomModel> roomList;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         stage.setTitle("Panel administrador");
 
+        addReceptionists(location, resources);
+
+        addRooms(location, resources);
+    }
+
+    private void addRooms(URL location, ResourceBundle resources) {
+
+
+
+        try {
+            connection();
+
+            String sql = "SELECT * FROM habitacion";
+            PreparedStatement preparedStatement = connection().prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            roomList = new ArrayList<>();
+            while (resultSet.next()) {
+                RoomModel roomModel = new RoomModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8));
+                roomList.add(roomModel);
+            }
+            connection().close();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        if (roomList != null) {
+
+            for (RoomModel room : roomList) {
+                numCol.setCellValueFactory(new PropertyValueFactory<>("roomNum"));
+                floorCol.setCellValueFactory(new PropertyValueFactory<>("floor"));
+                availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
+                typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+                priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+                characteristicsCol.setCellValueFactory(new PropertyValueFactory<>("characteristics"));
+
+
+                //add edit button to the editRoomCol column
+
+                editRoomCol.setCellFactory(new Callback<>() {
+                    @Override
+                    public TableCell<RoomModel, Void> call(final TableColumn<RoomModel, Void> param) {
+                        return new TableCell<>() {
+
+                            private final Button btn = new Button("Editar");
+
+                            {
+                                btn.setOnAction((ActionEvent event) -> {
+                                    final RoomModel data = getTableView().getItems().get(getIndex());
+
+                                    try {
+                                        stage.setTitle("Añadir habitación");
+                                        AdminAddRoomController.idHabitacion = data.getRoomId();
+                                        PanelLoginController.screenController.addScreen("adminaddroom", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/admin-addroom.fxml"))));
+                                        PanelLoginController.screenController.removeScreen("admindashboard");
+                                        PanelLoginController.screenController.activate("adminaddroom");
+                                        //pass variable to the next screen
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+
+                                });
+
+
+
+
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(btn);
+                                }
+                            }
+                        };
+                    }
+                });
+
+                //add delete button to the deleteCol column
+
+                deleteRoomCol.setCellFactory(new Callback<>() {
+                    @Override
+                    public TableCell<RoomModel, Void> call(final TableColumn<RoomModel, Void> param) {
+                        return new TableCell<>() {
+
+                            private final Button btn = new Button("Eliminar");
+
+                            {
+                                btn.setOnAction((ActionEvent event) -> {
+                                    RoomModel data = getTableView().getItems().get(getIndex());
+                                    //delete from habitacion table where num_habitacion = data.getRoomId() and update table
+                                    try {
+                                        String sql = "DELETE FROM habitacion WHERE id_habitacion = ?";
+                                        PreparedStatement preparedStatement = connection().prepareStatement(sql);
+                                        preparedStatement.setInt(1, data.getRoomId());
+                                        preparedStatement.executeUpdate();
+                                        connection().close();
+                                        //create alert
+                                        Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Habitación eliminada con éxito!");
+
+                                        //refresh table
+                                        roomsTable.getItems().clear();
+                                        initialize(location, resources);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(btn);
+                                }
+                            }
+                        };
+                    }
+                });
+
+                roomsTable.getItems().add(room);
+
+            }
+
+
+        }
+
+    }
+
+    private void addReceptionists(URL location, ResourceBundle resources) {
 
         try {
             connection();
@@ -82,7 +246,7 @@ public class AdminDashboardController implements Initializable {
 
                 //add edit button to the editCol column
 
-                    editCol.setCellFactory(new Callback<>() {
+                editCol.setCellFactory(new Callback<>() {
                     @Override
                     public TableCell<ReceptionModel, Void> call(final TableColumn<ReceptionModel, Void> param) {
                         return new TableCell<>() {
@@ -90,27 +254,27 @@ public class AdminDashboardController implements Initializable {
                             private final Button btn = new Button("Alta");
 
                             {
-                                    btn.setOnAction((ActionEvent event) -> {
-                                        final ReceptionModel data = getTableView().getItems().get(getIndex());
+                                btn.setOnAction((ActionEvent event) -> {
+                                    final ReceptionModel data = getTableView().getItems().get(getIndex());
 
-                                            try {
-                                                String sql = "UPDATE recepcionista SET active_recepcionista = 1 WHERE id_recepcionista = ?";
-                                                PreparedStatement preparedStatement = connection().prepareStatement(sql);
-                                                preparedStatement.setInt(1, data.getId());
-                                                preparedStatement.executeUpdate();
-                                                connection().close();
-                                                //create alert
-                                                Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Recepcionista dado de alta con éxito!");
+                                    try {
+                                        String sql = "UPDATE recepcionista SET active_recepcionista = 1 WHERE id_recepcionista = ?";
+                                        PreparedStatement preparedStatement = connection().prepareStatement(sql);
+                                        preparedStatement.setInt(1, data.getId());
+                                        preparedStatement.executeUpdate();
+                                        connection().close();
+                                        //create alert
+                                        Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Recepcionista dado de alta con éxito!");
 
-                                                //refresh table
-                                                receptionTable.getItems().clear();
-                                                initialize(location, resources);
-                                            } catch (SQLException e) {
-                                                e.printStackTrace();
-                                            }
+                                        //refresh table
+                                        receptionTable.getItems().clear();
+                                        initialize(location, resources);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
 
 
-                                    });
+                                });
 
 
 
@@ -123,7 +287,7 @@ public class AdminDashboardController implements Initializable {
                                 if (empty) {
                                     setGraphic(null);
                                 } else {
-                                        setGraphic(btn);
+                                    setGraphic(btn);
                                 }
                             }
                         };
@@ -180,12 +344,6 @@ public class AdminDashboardController implements Initializable {
 
 
         }
-
-
-
-
-
-
     }
 
     public static Connection connection() throws SQLException {
@@ -209,8 +367,19 @@ public class AdminDashboardController implements Initializable {
         AdminLoginController.currentAdminUsername = "";
         PanelLoginController.screenController.removeScreen("admindashboard");
         PanelLoginController.screenController.removeScreen("adminlogin");
+        stage.setWidth(400);
+        stage.setHeight(400);
         PanelLoginController.screenController.activate("panellogin");
+    }
 
-
+    public void AddRoom() throws IOException {
+        stage.setTitle("Añadir habitación");
+        stage.setWidth(600);
+        stage.setHeight(600);
+        PanelLoginController.screenController.addScreen("adminaddroom", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/admin-addroom.fxml"))));
+        PanelLoginController.screenController.removeScreen("admindashboard");
+        PanelLoginController.screenController.activate("adminaddroom");
+        //pass variable to the next screen
+        AdminAddRoomController.idHabitacion = 0;
     }
 }

@@ -32,7 +32,7 @@ public class ReceptionLoginController {
             if (receptionUsername.isEmpty() || receptionPassword.isEmpty() || Objects.equals(currentReceptionUsername, "")) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
-                String sql = "SELECT * FROM recepcionista WHERE username = ? AND password = ?";
+                String sql = "SELECT * FROM recepcionista WHERE username = ? AND password = ? AND active_recepcionista = 1";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, receptionUsername);
                 preparedStatement.setString(2, receptionPassword);
@@ -66,7 +66,7 @@ public class ReceptionLoginController {
 
     public void GoBack() throws IOException {
         screenController.removeScreen("receptionlogin");
-        stage.setWidth(500);
+        stage.setWidth(400);
         stage.setHeight(400);
         screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "/fxml/panel-login.fxml" )));
         screenController.activate("panellogin");

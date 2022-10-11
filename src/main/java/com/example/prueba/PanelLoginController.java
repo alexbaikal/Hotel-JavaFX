@@ -25,7 +25,7 @@ public class PanelLoginController implements Initializable {
     public void AdminLogin() throws IOException {
         screenController = new ScreenController(scene);
         screenController.addScreen("adminlogin", FXMLLoader.load(getClass().getResource( "admin-login.fxml" )));
-        screenController.addScreen("admindashboard", FXMLLoader.load(getClass().getResource("admin-dashboard.fxml")));
+        screenController.addScreen("admindashboard", FXMLLoader.load(getClass().getResource("/fxml/admin-dashboard.fxml")));
         screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "/fxml/panel-login.fxml" )));
         screenController.activate("adminlogin");
     }

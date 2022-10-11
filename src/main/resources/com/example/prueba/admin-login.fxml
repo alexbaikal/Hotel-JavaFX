@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba.admin.AdminLoginController">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba.admin.AdminLoginController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <ButtonBar prefHeight="40.0" prefWidth="200.0">
-      <buttons>
-         <Label text="Admin login" />
-      </buttons></ButtonBar>
-   <TextField fx:id="adminUsernameField" promptText="Username" />
-   <PasswordField fx:id="adminPasswordField" promptText="Password" />
+    <ButtonBar prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+            <Label prefHeight="35.0" prefWidth="220.0" text="Inicio administrador">
+                <font>
+                    <Font size="24.0" />
+                </font></Label>
+        </buttons></ButtonBar>
+    <TextField fx:id="adminUsernameField" promptText="Usuario">
+        <font>
+            <Font size="24.0" />
+        </font></TextField>
+    <PasswordField fx:id="adminPasswordField" promptText="Contraseña">
+        <font>
+            <Font size="24.0" />
+        </font></PasswordField>
 
-    <Button alignment="CENTER" focusTraversable="false" onAction="#LoginAdminHome" text="Log in"/>
+    <Button alignment="CENTER" focusTraversable="false" onAction="#LoginAdminHome" style="-fx-background-color: #aaffaa;" text="Iniciar sesión">
+        <font>
+            <Font size="25.0" />
+        </font></Button>
+
+    <Button mnemonicParsing="false" onAction="#GoBack" style="-fx-background-color: #059cfa;" text="Atrás" />
 </VBox>
