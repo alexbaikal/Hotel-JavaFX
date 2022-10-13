@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
@@ -72,6 +73,11 @@
          </TextField>
       </children>
    </GridPane>
-
-<Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="Añadir cliente" />
+   <FlowPane prefHeight="44.0" prefWidth="760.0">
+      <children>
+      
+      <Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="Añadir cliente" />
+         <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="Atrás" />
+      </children>
+   </FlowPane>
 </VBox>

@@ -68,4 +68,10 @@ public class ReceptionAddClientController {
             e.printStackTrace();
         }
     }
+
+    public void GoBack (ActionEvent actionEvent) throws IOException {
+        screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
+        screenController.removeScreen("receptionaddclient");
+        screenController.activate("receptiondashboard");
+    }
 }
