@@ -60,8 +60,7 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn<String, String> receptionistCol;
     @FXML
     private TableColumn<String, String> startDateCol;
-    @FXML
-    private TableColumn<String, String> startHourCol;
+
     @FXML
     private TableColumn<String, String> endDateCol;
     @FXML
@@ -74,7 +73,7 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn <ReservaDataModel, Void> deleteReservationCol;
 
     //client list
-    public ArrayList<ReservaDataModel> reservasList;
+    public static ArrayList<ReservaDataModel> reservasList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -126,7 +125,7 @@ public class ReceptionDashboardController implements Initializable {
                 while (resultSet3.next()) {
                     reservaDataModel.setNombre_recepcionista(resultSet3.getString(1) + " " + resultSet3.getString(2));
                 }
-                //fetch start date and end date, and hour start time and hour end time
+                //fetch start date and end date
                 String sql4 = "SELECT fecha_inicio, fecha_final FROM reserva WHERE id_reserva = ?";
                 PreparedStatement preparedStatement4 = connection().prepareStatement(sql4);
                 preparedStatement4.setInt(1, reservaDataModel.getId_reserva());
@@ -140,13 +139,9 @@ public class ReceptionDashboardController implements Initializable {
                     String dateStartString = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date (dateStart*1000L));
                     String dateEndString = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date (dateEnd*1000L));
                     //transform timestamp to hh:mm
-                    String hourStartString = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date (dateStart*1000L));
-                    String hourEndString = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date (dateEnd*1000L));
                     //set the values
                     reservaDataModel.setFecha_inicio_string(dateStartString);
                     reservaDataModel.setFecha_final_string(dateEndString);
-                    reservaDataModel.setHora_inicio_string(hourStartString);
-                    reservaDataModel.setHora_final_string(hourEndString);
                 }
                 //fetch price
                 String sql5 = "SELECT precio FROM habitacion WHERE id_habitacion = ?";
@@ -170,16 +165,13 @@ public class ReceptionDashboardController implements Initializable {
         if (reservasList != null) {
             for (ReservaDataModel reserva : reservasList) {
                 System.out.println(reserva.getId_reserva());
-                System.out.println(reserva.getHora_inicio_string());
 
 
                 numCol.setCellValueFactory(new PropertyValueFactory<>("numero_habitacion"));
                 clientCol.setCellValueFactory(new PropertyValueFactory<>("nombre_cliente"));
                 receptionistCol.setCellValueFactory(new PropertyValueFactory<>("nombre_recepcionista"));
                 startDateCol.setCellValueFactory(new PropertyValueFactory<>("fecha_inicio_string"));
-                startHourCol.setCellValueFactory(new PropertyValueFactory<>("hora_inicio_string"));
                 endDateCol.setCellValueFactory(new PropertyValueFactory<>("fecha_final_string"));
-                endTimeCol.setCellValueFactory(new PropertyValueFactory<>("hora_final_string"));
                 priceCol.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
                 //add edit button to the editCol column
@@ -368,10 +360,10 @@ public class ReceptionDashboardController implements Initializable {
     }
 
     public void AddReservation() throws IOException {
-        stage.setTitle("Añadir cliente");
-        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
+        stage.setTitle("Añadir reserva");
+        PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
         PanelLoginController.screenController.removeScreen("receptiondashboard");
-        PanelLoginController.screenController.activate("receptionaddclient");
+        PanelLoginController.screenController.activate("receptionaddreservation");
     }
 }
 

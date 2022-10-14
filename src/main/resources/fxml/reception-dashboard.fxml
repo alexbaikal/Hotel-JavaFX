@@ -45,9 +45,7 @@
                      <TableColumn fx:id="clientCol" prefWidth="127.0" text="Cliente" />
                      <TableColumn fx:id="receptionistCol" prefWidth="98.0" text="Recepcionista" />
                      <TableColumn fx:id="startDateCol" prefWidth="99.0" text="Data ingrés" />
-                     <TableColumn fx:id="startHourCol" prefWidth="123.0" text="Hora ingrés" />
                      <TableColumn fx:id="endDateCol" prefWidth="94.0" text="Data sortida" />
-                     <TableColumn fx:id="endTimeCol" prefWidth="102.0" text="Hora sortida" />
                      <TableColumn fx:id="priceCol" prefWidth="89.0" text="Preu" />
                      <TableColumn fx:id="editReservationCol" prefWidth="62.0" text="Editar" />
                      <TableColumn fx:id="deleteReservationCol" prefWidth="100.0" text="Eliminar" />

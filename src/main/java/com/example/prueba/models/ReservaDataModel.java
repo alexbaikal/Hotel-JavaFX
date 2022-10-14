@@ -13,9 +13,7 @@ public class ReservaDataModel {
     private String nombre_cliente;
     private String nombre_recepcionista;
     private String fecha_inicio_string;
-    private String hora_inicio_string;
     private String fecha_final_string;
-    private String hora_final_string;
     private int precio;
 
 
@@ -34,9 +32,7 @@ public class ReservaDataModel {
         this.nombre_cliente = "";
         this.nombre_recepcionista = "";
         this.fecha_inicio_string = "";
-        this.hora_inicio_string = "";
         this.fecha_final_string = "";
-        this.hora_final_string = "";
         this.precio = 0;
     }
 
@@ -129,13 +125,7 @@ public class ReservaDataModel {
         this.fecha_inicio_string = fecha_inicio_string;
     }
 
-    public String getHora_inicio_string() {
-        return hora_inicio_string;
-    }
 
-    public void setHora_inicio_string(String hora_inicio_string) {
-        this.hora_inicio_string = hora_inicio_string;
-    }
 
     public String getFecha_final_string() {
         return fecha_final_string;
@@ -145,13 +135,7 @@ public class ReservaDataModel {
         this.fecha_final_string = fecha_final_string;
     }
 
-    public String getHora_final_string() {
-        return hora_final_string;
-    }
 
-    public void setHora_final_string(String hora_final_string) {
-        this.hora_final_string = hora_final_string;
-    }
 
     public int getPrecio() {
         return precio;
