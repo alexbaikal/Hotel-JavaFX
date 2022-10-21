@@ -6,8 +6,8 @@ public class ReservaDataModel {
     private int id_cliente;
     private int id_recepcionista;
     private int id_habitacion;
-    private int fecha_inicio;
-    private int fecha_final;
+    private String fecha_inicio;
+    private String fecha_final;
     private String estado;
     private int numero_habitacion;
     private String nombre_cliente;
@@ -18,7 +18,7 @@ public class ReservaDataModel {
 
 
 
-    public ReservaDataModel(int id_reserva, int id_cliente, int id_recepcionista, int id_habitacion, int fecha_inicio, int fecha_final, String estado) {
+    public ReservaDataModel(int id_reserva, int id_cliente, int id_recepcionista, int id_habitacion, String fecha_inicio, String fecha_final, String estado) {
         super();
         this.id_reserva = id_reserva;
         this.id_cliente = id_cliente;
@@ -68,19 +68,19 @@ public class ReservaDataModel {
         this.id_habitacion = id_habitacion;
     }
 
-    public int getFecha_inicio() {
+    public String getFecha_inicio() {
         return fecha_inicio;
     }
 
-    public void setFecha_inicio(int fecha_inicio) {
+    public void setFecha_inicio(String fecha_inicio) {
         this.fecha_inicio = fecha_inicio;
     }
 
-    public int getFecha_final() {
+    public String getFecha_final() {
         return fecha_final;
     }
 
-    public void setFecha_final(int fecha_final) {
+    public void setFecha_final(String fecha_final) {
         this.fecha_final = fecha_final;
     }
 

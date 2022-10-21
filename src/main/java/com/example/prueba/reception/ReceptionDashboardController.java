@@ -64,8 +64,6 @@ public class ReceptionDashboardController implements Initializable {
     @FXML
     private TableColumn<String, String> endDateCol;
     @FXML
-    private TableColumn<String, String> endTimeCol;
-    @FXML
     private TableColumn<String, String> priceCol;
     @FXML
     private TableColumn <ReservaDataModel, Void> editReservationCol;
@@ -95,7 +93,7 @@ public class ReceptionDashboardController implements Initializable {
             ResultSet resultSet = preparedStatement.executeQuery();
             reservasList = new ArrayList<>();
             while (resultSet.next()) {
-                ReservaDataModel reservaDataModel = new ReservaDataModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7));
+                ReservaDataModel reservaDataModel = new ReservaDataModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
                 reservasList.add(reservaDataModel);
             }
 
@@ -131,20 +129,14 @@ public class ReceptionDashboardController implements Initializable {
                 preparedStatement4.setInt(1, reservaDataModel.getId_reserva());
                 ResultSet resultSet4 = preparedStatement4.executeQuery();
                 while (resultSet4.next()) {
-                    //timestamp fecha inicio
-                    int dateStart = resultSet4.getInt(1);
-                    //timestamp fecha final
-                    int dateEnd = resultSet4.getInt(2);
-                    //convertir timestamp a fecha
-                    String dateStartString = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date (dateStart*1000L));
-                    String dateEndString = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date (dateEnd*1000L));
-                    //transform timestamp to hh:mm
+                    String dateStart = resultSet4.getString(1);
+                    String dateEnd = resultSet4.getString(2);
                     //set the values
-                    reservaDataModel.setFecha_inicio_string(dateStartString);
-                    reservaDataModel.setFecha_final_string(dateEndString);
+                    reservaDataModel.setFecha_inicio_string(dateStart);
+                    reservaDataModel.setFecha_final_string(dateEnd);
                 }
                 //fetch price
-                String sql5 = "SELECT precio FROM habitacion WHERE id_habitacion = ?";
+                String sql5 = "SELECT costo FROM reserva WHERE id_habitacion = ?";
                 PreparedStatement preparedStatement5 = connection().prepareStatement(sql5);
                 preparedStatement5.setInt(1, reservaDataModel.getId_habitacion());
                 ResultSet resultSet5 = preparedStatement5.executeQuery();

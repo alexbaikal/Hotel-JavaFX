@@ -8,10 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,37 +17,27 @@ import static com.example.prueba.PanelLoginController.screenController;
 
 public class ReceptionAddReservationController {
     @FXML
-    public TextField nameClienteField;
+    public TextField clientSearchField;
     @FXML
-    public TextField surnameClienteField;
+    public TextField receptionistSearchField;
     @FXML
-    public TextField dniClienteField;
+    public TextField roomSearchField;
+
     @FXML
-    public TextField nationalityClienteField;
+    public TextField costField;
+
     @FXML
-    public TextField phoneClienteField;
+    DatePicker startDate;
     @FXML
-    public TextField emailClienteField;
-    @FXML
-    public TextField occupationClienteField;
-    @FXML
-    public TextField civilstateClienteField;
+    DatePicker endDate;
+
     @FXML
     public ListView<String> receptionistListView;
     @FXML
     public ListView<String> roomListView;
     @FXML
     public ListView<String> clientListView;
-    @FXML
-    TextField receptionistSearchField;
-    @FXML
-    TextField roomSearchField;
-    @FXML
-    TextField clientSearchField;
-    @FXML
-    DatePicker startDate;
-    @FXML
-    DatePicker endDate;
+
 
     //create list of receptionists
     List<String> receptionists;
@@ -287,32 +274,41 @@ public class ReceptionAddReservationController {
 
 
 
-        String nameCliente = nameClienteField.getText();
-        String surnameCliente = surnameClienteField.getText();
-        String dniCliente = dniClienteField.getText();
-        String nationalityCliente = nationalityClienteField.getText();
-        String phoneCliente = phoneClienteField.getText();
-        String emailCliente = emailClienteField.getText();
-        String occupationCliente = occupationClienteField.getText();
-        String civilstateCliente = civilstateClienteField.getText();
+        String clientField = clientSearchField.getText();
+        String receptionistField = clientSearchField.getText();
+        String roomField = roomSearchField.getText();
+        String cost = costField.getText();
 
-        try {
+        LocalDate start = LocalDate.parse(startDate.getValue().toString());
+        LocalDate end = LocalDate.parse(endDate.getValue().toString());
+
+        String id_cliente = clientField.substring(0, clientField.indexOf(":"));
+        String id_recepcionista = receptionistField.substring(0, receptionistField.indexOf(":"));
+        String id_habitacion = roomField.substring(0, roomField.indexOf(":"));
+
+            try {
             Connection connection = DBConnection.getConnections();
-            if (nameCliente.isEmpty() || surnameCliente.isEmpty() || dniCliente.isEmpty() || nationalityCliente.isEmpty() || phoneCliente.isEmpty() || emailCliente.isEmpty()) {
+            if (clientSearchField.getText().isEmpty() || receptionistSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || start == null || end == null || cost.isEmpty()) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
-                String sql = "INSERT INTO clientes (name_cliente, surname_cliente, DNI_cliente, nationality_cliente, phone_cliente, email_cliente, occupation_cliente, civilstate_cliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, nameCliente);
-                preparedStatement.setString(2, surnameCliente);
-                preparedStatement.setString(3, dniCliente);
-                preparedStatement.setString(4, nationalityCliente);
-                preparedStatement.setString(5, phoneCliente);
-                preparedStatement.setString(6, emailCliente);
-                preparedStatement.setString(7, occupationCliente);
-                preparedStatement.setString(8, civilstateCliente);
+                String query = "INSERT INTO reserva (id_cliente, id_recepcionista, id_habitacion, fecha_inicio, fecha_final, costo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, id_cliente);
+                preparedStatement.setString(2, id_recepcionista);
+                preparedStatement.setString(3, id_habitacion);
+                preparedStatement.setDate(4, Date.valueOf(start));
+                preparedStatement.setDate(5, Date.valueOf(end));
+                preparedStatement.setString(6, cost);
+                preparedStatement.setString(7, "Checked in");
                 preparedStatement.executeUpdate();
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Cliente agregado con éxito!");
+
+                //query id_habitacion in habitacion and set disponibilidad to "Ocupada"
+                String query2 = "UPDATE habitacion SET disponibilidad = 'Ocupada' WHERE id_habitacion = ?";
+                PreparedStatement preparedStatement2 = connection.prepareStatement(query2);
+                preparedStatement2.setString(1, id_habitacion);
+                preparedStatement2.executeUpdate();
+
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Reserva agregada con éxito!");
                 screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
                 screenController.removeScreen("receptionaddclient");
                 screenController.activate("receptiondashboard");
