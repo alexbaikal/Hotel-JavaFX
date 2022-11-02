@@ -15,10 +15,9 @@ public class RoomModel {
 
 
 
-    public RoomModel(int roomId, int bookingId, int roomNum, int floor, String availability, String type, String price, String characteristics) {
+    public RoomModel(int roomId, int roomNum, int floor, String availability, String type, String price, String characteristics) {
         super();
         this.roomId = roomId;
-        this.bookingId = bookingId;
         this.roomNum = roomNum;
         this.floor = floor;
         this.availability = availability;
@@ -33,14 +32,6 @@ public class RoomModel {
 
     public void setRoomId(int roomId) {
         this.roomId = roomId;
-    }
-
-    public int getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
     }
 
     public int getRoomNum() {

@@ -144,15 +144,14 @@ public class AdminAddRoomController implements Initializable {
                     PanelLoginController.screenController.removeScreen("adminaddroom");
                     PanelLoginController.screenController.activate("admindashboard");
                 } else {
-                    String sql = "INSERT INTO habitacion (id_reserva, num_habitacion, planta, disponibilidad, tipo, precio, caracteristicas) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO habitacion (num_habitacion, planta, disponibilidad, tipo, precio, caracteristicas) VALUES (?, ?, ?, ?, ?, ?)";
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                    preparedStatement.setString(1, 0+"");
-                    preparedStatement.setString(2, numRoomFieldText);
-                    preparedStatement.setString(3, floorFieldText);
-                    preparedStatement.setString(4, availabilityDropdownText);
-                    preparedStatement.setString(5, typeFieldText);
-                    preparedStatement.setString(6, priceFieldText);
-                    preparedStatement.setString(7, characteristicsFieldText);
+                    preparedStatement.setString(1, numRoomFieldText);
+                    preparedStatement.setString(2, floorFieldText);
+                    preparedStatement.setString(3, availabilityDropdownText);
+                    preparedStatement.setString(4, typeFieldText);
+                    preparedStatement.setString(5, priceFieldText);
+                    preparedStatement.setString(6, characteristicsFieldText);
                     preparedStatement.executeUpdate();
                     Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Habitación añadida correctamente");
                     //go back to admin panel

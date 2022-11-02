@@ -93,7 +93,7 @@ public class AdminDashboardController implements Initializable {
             ResultSet resultSet = preparedStatement.executeQuery();
             roomList = new ArrayList<>();
             while (resultSet.next()) {
-                RoomModel roomModel = new RoomModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8));
+                RoomModel roomModel = new RoomModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
                 roomList.add(roomModel);
             }
             connection().close();
@@ -207,7 +207,6 @@ public class AdminDashboardController implements Initializable {
                 roomsTable.getItems().add(room);
 
             }
-
 
         }
 

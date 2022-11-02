@@ -44,7 +44,7 @@ public class ReceptionDashboardController implements Initializable {
     @FXML
     private TableColumn<String, String> civilStateCol;
     @FXML
-    private TableColumn <ClientModel, Void> editCol;
+    private TableColumn <ClientModel, Void> editClientCol;
     @FXML
     private TableColumn <ClientModel, Void> deleteCol;
 
@@ -166,7 +166,7 @@ public class ReceptionDashboardController implements Initializable {
                 endDateCol.setCellValueFactory(new PropertyValueFactory<>("fecha_final_string"));
                 priceCol.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
-                //add edit button to the editCol column
+                //add edit button to the editReservationCol column
                 editReservationCol.setCellFactory(new Callback<>() {
                     @Override
                     public TableCell<ReservaDataModel, Void> call(final TableColumn<ReservaDataModel, Void> param) {
@@ -267,8 +267,8 @@ public class ReceptionDashboardController implements Initializable {
                 occupationCol.setCellValueFactory(new PropertyValueFactory<>("occupation"));
                 civilStateCol.setCellValueFactory(new PropertyValueFactory<>("civilState"));
 
-                //add edit button to the editCol column
-                editCol.setCellFactory(new Callback<>() {
+                //add edit button to the editClientCol column
+                editClientCol.setCellFactory(new Callback<>() {
                     @Override
                     public TableCell<ClientModel, Void> call(final TableColumn<ClientModel, Void> param) {
                         return new TableCell<>() {
@@ -279,6 +279,8 @@ public class ReceptionDashboardController implements Initializable {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ClientModel data = getTableView().getItems().get(getIndex());
                                     System.out.println("selectedData: " + data.getId());
+
+
                                 });
                             }
 
