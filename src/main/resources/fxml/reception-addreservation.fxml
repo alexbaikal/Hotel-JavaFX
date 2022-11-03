@@ -123,7 +123,7 @@
       <children>
          <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="⬅ Atrás" />
       
-      <Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddReservation" text="➕ Añadir reserva" />
+      <Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddReservation" fx:id="addButton" text="➕ Añadir reserva" />
       </children>
    </FlowPane>
 </VBox>

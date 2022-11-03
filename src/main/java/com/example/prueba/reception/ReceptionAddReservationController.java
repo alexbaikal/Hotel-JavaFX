@@ -5,17 +5,20 @@ import backend.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static com.example.prueba.PanelLoginController.screenController;
 
-public class ReceptionAddReservationController {
+public class ReceptionAddReservationController implements Initializable {
     @FXML
     public TextField clientSearchField;
     @FXML
@@ -37,78 +40,112 @@ public class ReceptionAddReservationController {
     public ListView<String> roomListView;
     @FXML
     public ListView<String> clientListView;
-
+    @FXML
+    Button addButton;
 
     //create list of receptionists
     List<String> receptionists;
     List<String> rooms;
     List<String> clients;
 
+    public static int idReserva;
 
+    private String idRecepcionista;
+    private String idHabitacion;
+    private String idCliente;
 
     //crete initialize method
-
-    public void initialize() throws SQLException {
-        //get receptionist list
-        receptionists = getReceptionistsFromDB();
-
-        //set receptionists to listview
-        setReceptionistsField(receptionists);
-        
-        //get room list
-        rooms = getRoomsFromDB();
-        
-        //set rooms to listview
-        setRoomsField(rooms);
-        
-        //get client list
-        clients = getClientsFromDB();
-        
-        //set clients to listview
-        setClientsField(clients);
-
-        //setDisable to item.isBefore(currentDate) to startDate and endDate to DataCell
-        LocalDate currentDate = LocalDate.now();
-
-        startDate.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(empty || item.isBefore(currentDate));
-            }
-        });
-        endDate.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(empty || item.isBefore(currentDate));
-            }
-        });
-        //if startDate is selected, endDate DateCell setDisable to item.isBefore(startDate)
-        startDate.setOnAction(event -> {
-            //get startDate value to LocalDate
-            System.out.println(startDate.getValue());
-            LocalDate start = LocalDate.parse(startDate.getValue().toString());
-            endDate.setDayCellFactory(picker -> new DateCell() {
-                @Override
-                public void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setDisable(item.isBefore(currentDate) || item.isBefore(start));
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (idReserva != 0) {
+            addButton.setText("Actualizar");
+            try {
+                Connection connection = DBConnection.getConnections();
+                String sql = "SELECT * FROM reserva WHERE id_reserva = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, idReserva);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    startDate.setValue(LocalDate.parse(resultSet.getString("fecha_inicio")));
+                    endDate.setValue(LocalDate.parse(resultSet.getString("fecha_final")));
+                    costField.setText(String.valueOf(resultSet.getInt("costo")));
+                    idRecepcionista = resultSet.getString("id_recepcionista");
+                    idHabitacion = resultSet.getString("id_habitacion");
+                    idCliente = resultSet.getString("id_cliente");
                 }
-            });
-        });
-        //if endDate is selected, startDate DateCell setDisable to item.isAfter(endDate)
-        endDate.setOnAction(event -> {
-            //get endDate value to LocalDate
-            LocalDate end = LocalDate.parse(endDate.getValue().toString());
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        try {
+            //get receptionist list
+            receptionists = getReceptionistsFromDB();
+
+            //set receptionists to listview
+            setReceptionistsField(receptionists);
+
+            //get room list
+            rooms = getRoomsFromDB();
+
+            //set rooms to listview
+            setRoomsField(rooms);
+
+            //get client list
+            clients = getClientsFromDB();
+
+            //set clients to listview
+            setClientsField(clients);
+
+            //setDisable to item.isBefore(currentDate) to startDate and endDate to DataCell
+            LocalDate currentDate = LocalDate.now();
+
             startDate.setDayCellFactory(picker -> new DateCell() {
                 @Override
                 public void updateItem(LocalDate item, boolean empty) {
                     super.updateItem(item, empty);
-                    setDisable(item.isBefore(currentDate) || item.isAfter(end));
+                    setDisable(empty || item.isBefore(currentDate));
                 }
             });
-        });
+            endDate.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setDisable(empty || item.isBefore(currentDate));
+                }
+            });
+            //if startDate is selected, endDate DateCell setDisable to item.isBefore(startDate)
+            startDate.setOnAction(event -> {
+                //get startDate value to LocalDate
+                System.out.println(startDate.getValue());
+                LocalDate start = LocalDate.parse(startDate.getValue().toString());
+                endDate.setDayCellFactory(picker -> new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isBefore(currentDate) || item.isBefore(start));
+                    }
+                });
+            });
+            //if endDate is selected, startDate DateCell setDisable to item.isAfter(endDate)
+            endDate.setOnAction(event -> {
+                //get endDate value to LocalDate
+                LocalDate end = LocalDate.parse(endDate.getValue().toString());
+                startDate.setDayCellFactory(picker -> new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isBefore(currentDate) || item.isAfter(end));
+                    }
+                });
+            });
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
 
     }
 
@@ -128,14 +165,21 @@ public class ReceptionAddReservationController {
 
         while (resultSet.next()) {
             //check if disponibilidad is "Disponible"
-            if (resultSet.getString("disponibilidad").equals("Disponible")) {
+            boolean checkDisponibility;
+            if (Integer.parseInt(idHabitacion) != 0 ) {
+                checkDisponibility = resultSet.getInt("id_habitacion") == Integer.parseInt(idHabitacion);
+            }
+            else {
+                checkDisponibility = resultSet.getString("disponibilidad").equals("Disponible");
+            }
+            if (checkDisponibility) {
                 //add room to list
-                String idHabitacion = resultSet.getString("id_habitacion");
+                String idHabitacionList = resultSet.getString("id_habitacion");
                 String numHabitacion = resultSet.getString("num_habitacion");
                 String planta = resultSet.getString("planta");
                 String tipo = resultSet.getString("tipo");
                 String precio = resultSet.getString("precio");
-                String room = idHabitacion + ": " + "Num.: " + numHabitacion + " Planta: " + planta + " Tipo: " + tipo + " - " + precio+"€";
+                String room = idHabitacionList + ": " + "Num.: " + numHabitacion + " Planta: " + planta + " Tipo: " + tipo + " - " + precio+"€";
                 roomsFromDB.add(room);
             }
         }
@@ -162,7 +206,14 @@ public class ReceptionAddReservationController {
             }
         });
 
-
+        //if idRecepcionista != 0, set textfield to idRecepcionista from receptionists list if includes idRecepcionista
+        if (Integer.parseInt(idRecepcionista) != 0) {
+            for (String receptionist : receptionists) {
+                if (receptionist.toLowerCase().contains(String.valueOf(idRecepcionista).toLowerCase())) {
+                    receptionistSearchField.setText(receptionist);
+                }
+            }
+        }
 
         //add listener to listview, on click, show selected item in searchfield
         receptionistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -188,6 +239,14 @@ public class ReceptionAddReservationController {
                 }
             });
 
+        //if idHabitacion != 0, set textfield to idHabitacion from rooms list if includes idHabitacion
+        if (Integer.parseInt(idHabitacion) != 0) {
+            for (String room : rooms) {
+                if (room.toLowerCase().contains(String.valueOf(idHabitacion).toLowerCase())) {
+                    roomSearchField.setText(room);
+                }
+            }
+        }
             //add listener to listview, on click, show selected item in searchfield
             roomListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 roomSearchField.setText(newValue);
@@ -259,7 +318,14 @@ public class ReceptionAddReservationController {
                     }
                 }
             });
-
+            //if idCliente != 0, set textfield to idCliente from clients list if includes idCliente
+            if (Integer.parseInt(idCliente) != 0) {
+                for (String client : clients) {
+                    if (client.toLowerCase().contains(String.valueOf(idCliente).toLowerCase())) {
+                        clientSearchField.setText(client);
+                    }
+                }
+            }
             //add listener to listview, on click, show selected item in searchfield
             clientListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 clientSearchField.setText(newValue);
@@ -270,7 +336,7 @@ public class ReceptionAddReservationController {
 
 
 
-        public void ReceptionAddReservation(ActionEvent actionEvent) throws IOException {
+        public void ReceptionAddReservation() throws IOException {
 
 
 
@@ -281,17 +347,42 @@ public class ReceptionAddReservationController {
 
         LocalDate start = LocalDate.parse(startDate.getValue().toString());
         LocalDate end = LocalDate.parse(endDate.getValue().toString());
+            String id_cliente;
+            String id_recepcionista;
+            String id_habitacion;
+        try {
+            id_cliente = clientField.substring(0, clientField.indexOf(":"));
+            id_recepcionista = receptionistField.substring(0, receptionistField.indexOf(":"));
+            id_habitacion = roomField.substring(0, roomField.indexOf(":"));
+        } catch (StringIndexOutOfBoundsException e) {
+            id_cliente = "0";
+            id_recepcionista = "0";
+            id_habitacion = "0";
+            //create alert
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error al añadir reserva");
+            alert.setContentText("No se ha podido añadir la reserva, comprueba que has introducido todos los datos correctamente");
+            alert.showAndWait();
 
-        String id_cliente = clientField.substring(0, clientField.indexOf(":"));
-        String id_recepcionista = receptionistField.substring(0, receptionistField.indexOf(":"));
-        String id_habitacion = roomField.substring(0, roomField.indexOf(":"));
+        }
 
             try {
             Connection connection = DBConnection.getConnections();
             if (clientSearchField.getText().isEmpty() || receptionistSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || start == null || end == null || cost.isEmpty()) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
-                String query = "INSERT INTO reserva (id_cliente, id_recepcionista, id_habitacion, fecha_inicio, fecha_final, costo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String query;
+                String message;
+
+                if (idReserva != 0) {
+                    message = "Reserva actualizada correctamente!";
+                    query = "UPDATE reserva SET id_cliente = ?, id_recepcionista = ?, id_habitacion = ?, fecha_inicio = ?, fecha_final = ?, costo = ?, estado = ? WHERE id_reserva = "+idReserva;
+                } else {
+                    message = "Reserva agregada correctamente!";
+                    query = "INSERT INTO reserva (id_cliente, id_recepcionista, id_habitacion, fecha_inicio, fecha_final, costo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                }
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, id_cliente);
                 preparedStatement.setString(2, id_recepcionista);
@@ -308,7 +399,7 @@ public class ReceptionAddReservationController {
                 preparedStatement2.setString(1, id_habitacion);
                 preparedStatement2.executeUpdate();
 
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Reserva agregada con éxito!");
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", message);
                 screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
                 screenController.removeScreen("receptionaddclient");
                 screenController.activate("receptiondashboard");
@@ -325,4 +416,6 @@ public class ReceptionAddReservationController {
         screenController.removeScreen("receptionaddclient");
         screenController.activate("receptiondashboard");
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.prueba.reception;
 
 import com.example.prueba.PanelLoginController;
+import com.example.prueba.admin.AdminAddRoomController;
 import com.example.prueba.models.ClientModel;
 import com.example.prueba.models.ReservaDataModel;
 import javafx.event.ActionEvent;
@@ -177,7 +178,17 @@ public class ReceptionDashboardController implements Initializable {
                             {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ReservaDataModel data = getTableView().getItems().get(getIndex());
-                                    System.out.println("selectedData: " + data.getId_reserva());
+
+                                    try {
+                                        stage.setTitle("Editar reserva");
+                                        ReceptionAddReservationController.idReserva = data.getId_reserva();
+                                        PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
+                                        PanelLoginController.screenController.removeScreen("receptiondashboard");
+                                        PanelLoginController.screenController.activate("receptionaddreservation");
+                                        //pass variable to the next screen
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 });
                             }
 
@@ -278,8 +289,18 @@ public class ReceptionDashboardController implements Initializable {
                             {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ClientModel data = getTableView().getItems().get(getIndex());
-                                    System.out.println("selectedData: " + data.getId());
 
+
+                                    try {
+                                        stage.setTitle("Editar cliente");
+                                        ReceptionAddClientController.idCliente = data.getId();
+                                        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
+                                        PanelLoginController.screenController.removeScreen("receptiondashboard");
+                                        PanelLoginController.screenController.activate("receptionaddclient");
+                                        //pass variable to the next screen
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
 
                                 });
                             }

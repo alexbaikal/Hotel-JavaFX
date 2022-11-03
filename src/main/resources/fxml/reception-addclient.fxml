@@ -76,7 +76,7 @@
    <FlowPane prefHeight="44.0" prefWidth="760.0">
       <children>
       
-      <Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="Añadir cliente" />
+      <Button fx:id="addButton" alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="Añadir cliente" />
          <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="Atrás" />
       </children>
    </FlowPane>
