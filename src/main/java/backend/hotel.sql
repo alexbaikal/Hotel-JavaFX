@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2022 at 02:06 PM
+-- Generation Time: Nov 04, 2022 at 01:17 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -64,25 +64,8 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`id_cliente`, `name_cliente`, `surname_cliente`, `DNI_cliente`, `nationality_cliente`, `phone_cliente`, `email_cliente`, `occupation_cliente`, `civilstate_cliente`) VALUES
 (1, 'Juanito', 'Vazquez Velazquez', 'E06362696', 'Hungria', '52363673', 'asgaehe@sdsdgsd.sdfg', 'Vacante libre', 'Soltero'),
-(7, 'Manolito', 'Patas Largas', '78396742E', 'HUngría', '+34 764 84 29 84', 'humaoig@jomaue.com', 'Vendedor ambulante de hurones.', 'Solteroski'),
-(8, 'Hiah', 'moieam', '49398354E', 'hiaomh', '893673325', 'gsdmhe@sadgsdg.asf', 'sindugeiWU', 'SROHIMSRH');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `contacto`
---
-
-CREATE TABLE `contacto` (
-  `DNI` varchar(30) NOT NULL,
-  `nacionalidad` varchar(30) DEFAULT NULL,
-  `email` varchar(30) DEFAULT NULL,
-  `telefono` int(15) DEFAULT NULL,
-  `nombre` varchar(30) DEFAULT NULL,
-  `apellidos` varchar(30) DEFAULT NULL,
-  `estado_civil` varchar(30) DEFAULT NULL,
-  `ocupacion` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(7, 'Manolito', 'Largas', '78396742E', 'Hungría', '+34 764 84 29 84', 'humaoig@jomaue.com', 'Vendedor ambulante de hurones.', '3 hijos'),
+(9, 'Alvaro', 'Diaz', '3456345646E', 'Bulgaria', '76798324', 'ahaeh@asfsd.sgd', 'Empleado del estado', 'Casado');
 
 -- --------------------------------------------------------
 
@@ -92,7 +75,6 @@ CREATE TABLE `contacto` (
 
 CREATE TABLE `habitacion` (
   `id_habitacion` int(15) NOT NULL,
-  `id_reserva` int(11) NOT NULL,
   `num_habitacion` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `planta` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `disponibilidad` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -105,9 +87,10 @@ CREATE TABLE `habitacion` (
 -- Dumping data for table `habitacion`
 --
 
-INSERT INTO `habitacion` (`id_habitacion`, `id_reserva`, `num_habitacion`, `planta`, `disponibilidad`, `tipo`, `precio`, `caracteristicas`) VALUES
-(1, 0, '3', '1', 'Disponible', 'Familiar', 0, 'Tiene manchas en la alfombra.'),
-(1116, 0, '5', '4', 'Ocupada', 'Individual', 20, 'Sin características.');
+INSERT INTO `habitacion` (`id_habitacion`, `num_habitacion`, `planta`, `disponibilidad`, `tipo`, `precio`, `caracteristicas`) VALUES
+(1, '3', '1', 'Disponible', 'Familiar', 0, 'Tiene manchas en la alfombra.'),
+(1116, '5', '4', 'Ocupada', 'Individual', 20, 'Sin características.'),
+(1118, '6', '2', 'Disponible', 'Individual', 30, 'Nova.');
 
 -- --------------------------------------------------------
 
@@ -133,7 +116,8 @@ CREATE TABLE `recepcionista` (
 --
 
 INSERT INTO `recepcionista` (`id_recepcionista`, `name_recepcionista`, `surname_recepcionista`, `DNI_recepcionista`, `nationality_recepcionista`, `phone_recepcionista`, `email_recepcionista`, `username`, `password`, `active_recepcionista`) VALUES
-(1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1', 1);
+(1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1', 1),
+(8, 'Pepe', 'Grillo Marasd', '86934529A', 'Esoala', '+35261623644', 'asfaheh@afadsgf.asd', '2', '2', 1);
 
 -- --------------------------------------------------------
 
@@ -146,8 +130,9 @@ CREATE TABLE `reserva` (
   `id_cliente` int(30) DEFAULT NULL,
   `id_recepcionista` int(30) DEFAULT NULL,
   `id_habitacion` int(30) NOT NULL,
-  `fecha_inicio` int(30) DEFAULT NULL,
-  `fecha_final` int(30) DEFAULT NULL,
+  `fecha_inicio` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fecha_final` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `costo` int(10) NOT NULL,
   `estado` varchar(10) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -155,32 +140,10 @@ CREATE TABLE `reserva` (
 -- Dumping data for table `reserva`
 --
 
-INSERT INTO `reserva` (`id_reserva`, `id_cliente`, `id_recepcionista`, `id_habitacion`, `fecha_inicio`, `fecha_final`, `estado`) VALUES
-(16, 3, 3, 0, 3, 3, ''),
-(17, 2, 2, 0, 2, 2, ''),
-(18, 4, 4, 0, 4, 4, ''),
-(19, 8, 8, 0, 8, 8, ''),
-(20, 3, 3, 0, 3, 3, ''),
-(21, 2, 3, 0, 2, 2, ''),
-(22, 2, 3, 0, 2, 2, ''),
-(23, 2, 3, 0, 2, 2, ''),
-(24, 23, 3, 0, 2, 2, ''),
-(25, 0, 0, 0, 0, 0, ''),
-(26, 0, 0, 0, 0, 0, ''),
-(27, 0, 0, 0, 0, 0, ''),
-(28, 0, 0, 0, 0, 0, ''),
-(29, 1, 1, 0, 1, 1, ''),
-(30, 0, 0, 0, 0, 0, ''),
-(31, 1, 1, 0, 1, 1, ''),
-(32, 4, 4, 0, 4, 4, ''),
-(33, 0, 0, 0, 0, 0, ''),
-(34, 1, 1, 0, 1, 1, ''),
-(35, 0, 0, 0, 0, 0, ''),
-(36, 0, 0, 0, 0, 0, ''),
-(37, 0, 0, 0, 0, 0, ''),
-(38, 0, 0, 0, 0, 0, ''),
-(39, 1, 1, 0, 1, 1, ''),
-(40, 0, 0, 0, 0, 0, '');
+INSERT INTO `reserva` (`id_reserva`, `id_cliente`, `id_recepcionista`, `id_habitacion`, `fecha_inicio`, `fecha_final`, `costo`, `estado`) VALUES
+(42, 9, 1, 1, '2022-10-21', '2022-11-06', 26, 'Checked in'),
+(43, 8, 1, 1, '2022-10-22', '2022-10-27', 101, 'Checked in'),
+(44, 1, 1, 1118, '2022-10-21', '2022-10-22', 202, 'Checked in');
 
 --
 -- Indexes for dumped tables
@@ -200,17 +163,10 @@ ALTER TABLE `clientes`
   ADD UNIQUE KEY `DNI_cliente` (`DNI_cliente`) USING BTREE;
 
 --
--- Indexes for table `contacto`
---
-ALTER TABLE `contacto`
-  ADD UNIQUE KEY `DNI` (`DNI`) USING BTREE;
-
---
 -- Indexes for table `habitacion`
 --
 ALTER TABLE `habitacion`
-  ADD PRIMARY KEY (`id_habitacion`),
-  ADD KEY `id_reserva` (`id_reserva`);
+  ADD PRIMARY KEY (`id_habitacion`);
 
 --
 -- Indexes for table `recepcionista`
@@ -229,7 +185,8 @@ ALTER TABLE `reserva`
   ADD PRIMARY KEY (`id_reserva`),
   ADD UNIQUE KEY `id_reserva` (`id_reserva`,`id_cliente`,`id_recepcionista`),
   ADD UNIQUE KEY `id_reserva_2` (`id_reserva`,`id_cliente`,`id_recepcionista`),
-  ADD KEY `id_habitacion` (`id_habitacion`);
+  ADD KEY `id_habitacion` (`id_habitacion`),
+  ADD KEY `id_cliente` (`id_cliente`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -245,25 +202,25 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_cliente` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `habitacion`
 --
 ALTER TABLE `habitacion`
-  MODIFY `id_habitacion` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1118;
+  MODIFY `id_habitacion` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1119;
 
 --
 -- AUTO_INCREMENT for table `recepcionista`
 --
 ALTER TABLE `recepcionista`
-  MODIFY `id_recepcionista` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_recepcionista` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `reserva`
 --
 ALTER TABLE `reserva`
-  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
