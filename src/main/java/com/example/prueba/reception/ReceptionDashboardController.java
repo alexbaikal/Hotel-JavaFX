@@ -1,7 +1,6 @@
 package com.example.prueba.reception;
 
 import com.example.prueba.PanelLoginController;
-import com.example.prueba.admin.AdminAddRoomController;
 import com.example.prueba.models.ClientModel;
 import com.example.prueba.models.ReservaDataModel;
 import javafx.event.ActionEvent;
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -50,9 +50,8 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn <ClientModel, Void> deleteCol;
 
     //client list
-    public ArrayList<ClientModel> clientList;
     @FXML
-    private TableView<ReservaDataModel> reservationTable;
+    public TableView<ReservaDataModel> reservationTable;
     @FXML
     private TableColumn<String, String> clientCol;
     @FXML
@@ -72,7 +71,9 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn <ReservaDataModel, Void> deleteReservationCol;
 
     //client list
-    public static ArrayList<ReservaDataModel> reservasList;
+    public static ArrayList<ReservaDataModel> reservesList;
+    public ArrayList<ClientModel> clientList;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,7 +85,7 @@ public class ReceptionDashboardController implements Initializable {
 
     }
 
-    private void addReservationsToTable() {
+    public void addReservationsToTable() {
 
         try {
             connection();
@@ -92,14 +93,14 @@ public class ReceptionDashboardController implements Initializable {
             String sql = "SELECT * FROM reserva";
             PreparedStatement preparedStatement = connection().prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
-            reservasList = new ArrayList<>();
+            reservesList = new ArrayList<>();
             while (resultSet.next()) {
                 ReservaDataModel reservaDataModel = new ReservaDataModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
-                reservasList.add(reservaDataModel);
+                reservesList.add(reservaDataModel);
             }
 
             //create a loop for reservasList to fetch all the necessary data from database with the id's
-            for (ReservaDataModel reservaDataModel : reservasList) {
+            for (ReservaDataModel reservaDataModel : reservesList) {
                 //fetch room number
                 String sql1 = "SELECT num_habitacion FROM habitacion WHERE id_habitacion = ?";
                 PreparedStatement preparedStatement1 = connection().prepareStatement(sql1);
@@ -135,11 +136,20 @@ public class ReceptionDashboardController implements Initializable {
                     //set the values
                     reservaDataModel.setFecha_inicio_string(dateStart);
                     reservaDataModel.setFecha_final_string(dateEnd);
+
+                    //if dateEnd is the same or before today, then set disponibilidad column of habitacion table to "Disponible"
+                    if (dateEnd.compareTo(LocalDate.now().toString()) <= 0) {
+                        String sql5 = "UPDATE habitacion SET disponibilidad = ? WHERE id_habitacion = ?";
+                        PreparedStatement preparedStatement5 = connection().prepareStatement(sql5);
+                        preparedStatement5.setString(1, "Disponible");
+                        preparedStatement5.setInt(2, reservaDataModel.getId_habitacion());
+                        preparedStatement5.executeUpdate();
+                    }
                 }
                 //fetch price
-                String sql5 = "SELECT costo FROM reserva WHERE id_habitacion = ?";
+                String sql5 = "SELECT costo FROM reserva WHERE id_reserva = ?";
                 PreparedStatement preparedStatement5 = connection().prepareStatement(sql5);
-                preparedStatement5.setInt(1, reservaDataModel.getId_habitacion());
+                preparedStatement5.setInt(1, reservaDataModel.getId_reserva());
                 ResultSet resultSet5 = preparedStatement5.executeQuery();
                 while (resultSet5.next()) {
                     reservaDataModel.setPrecio(resultSet5.getInt(1));
@@ -153,10 +163,10 @@ public class ReceptionDashboardController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(reservasList.size());
+        System.out.println(reservesList.size());
 
-        if (reservasList != null) {
-            for (ReservaDataModel reserva : reservasList) {
+        if (reservesList != null) {
+            for (ReservaDataModel reserva : reservesList) {
                 System.out.println(reserva.getId_reserva());
 
 
@@ -218,6 +228,7 @@ public class ReceptionDashboardController implements Initializable {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ReservaDataModel data = getTableView().getItems().get(getIndex());
                                     System.out.println("selectedData: " + data.getId_habitacion());
+                                    deleteReservation(data);
                                 });
                             }
 
@@ -241,6 +252,29 @@ public class ReceptionDashboardController implements Initializable {
 
         }
 
+    }
+
+    private void deleteReservation(ReservaDataModel data) {
+        try {
+            String sql = "DELETE FROM reserva WHERE id_reserva = ?";
+            PreparedStatement preparedStatement = connection().prepareStatement(sql);
+            preparedStatement.setInt(1, data.getId_reserva());
+            preparedStatement.executeUpdate();
+
+            String sql2 = "UPDATE habitacion SET disponibilidad = ? WHERE id_habitacion = ?";
+            PreparedStatement preparedStatement2 = connection().prepareStatement(sql2);
+            preparedStatement2.setString(1, "Disponible");
+            preparedStatement2.setInt(2, data.getId_habitacion());
+            preparedStatement2.executeUpdate();
+
+
+            connection().close();
+            //refresh the table
+            reservationTable.getItems().clear();
+            addReservationsToTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addClientsToTable() {
@@ -331,6 +365,9 @@ public class ReceptionDashboardController implements Initializable {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ClientModel data = getTableView().getItems().get(getIndex());
                                     System.out.println("selectedData: " + data.getId());
+                                    //delete client from database
+                                    deleteClient(data);
+
                                 });
                             }
 
@@ -354,6 +391,21 @@ public class ReceptionDashboardController implements Initializable {
 
         }
 
+    }
+
+    private void deleteClient(ClientModel data) {
+        try {
+            String sql = "DELETE FROM clientes WHERE id_cliente = ?";
+            PreparedStatement preparedStatement = connection().prepareStatement(sql);
+            preparedStatement.setInt(1, data.getId());
+            preparedStatement.executeUpdate();
+            connection().close();
+            //refresh the table
+            clientTable.getItems().clear();
+            addClientsToTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

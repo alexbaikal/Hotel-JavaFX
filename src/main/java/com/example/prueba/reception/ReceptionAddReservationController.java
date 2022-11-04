@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 import static com.example.prueba.PanelLoginController.screenController;
 
-public class ReceptionAddReservationController implements Initializable {
+public class ReceptionAddReservationController extends ReceptionDashboardController implements Initializable {
     @FXML
     public TextField clientSearchField;
     @FXML
@@ -341,7 +341,7 @@ public class ReceptionAddReservationController implements Initializable {
 
 
         String clientField = clientSearchField.getText();
-        String receptionistField = clientSearchField.getText();
+        String receptionistField = receptionistSearchField.getText();
         String roomField = roomSearchField.getText();
         String cost = costField.getText();
 
@@ -399,14 +399,19 @@ public class ReceptionAddReservationController implements Initializable {
                 preparedStatement2.setString(1, id_habitacion);
                 preparedStatement2.executeUpdate();
 
+
+
                 Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", message);
                 screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
                 screenController.removeScreen("receptionaddclient");
                 screenController.activate("receptiondashboard");
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
 

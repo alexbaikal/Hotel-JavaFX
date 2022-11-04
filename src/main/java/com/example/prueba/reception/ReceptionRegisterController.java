@@ -56,7 +56,7 @@ public class ReceptionRegisterController {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Contraseña menor de 6 caracteres!");
             } else {
                 String sql = "INSERT INTO `recepcionista`(" +
-                        "name_recepcionisa," +
+                        "name_recepcionista," +
                         "surname_recepcionista," +
                         "DNI_recepcionista," +
                         "nationality_recepcionista," +

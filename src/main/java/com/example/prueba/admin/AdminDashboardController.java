@@ -243,6 +243,7 @@ public class AdminDashboardController implements Initializable {
                 phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
                 emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
+
                 //add edit button to the editCol column
 
                 editCol.setCellFactory(new Callback<>() {
