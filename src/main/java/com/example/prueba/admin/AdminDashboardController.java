@@ -122,14 +122,14 @@ public class AdminDashboardController implements Initializable {
                     public TableCell<RoomModel, Void> call(final TableColumn<RoomModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Editar");
+                            private final Button btn = new Button("✏Editar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
                                     final RoomModel data = getTableView().getItems().get(getIndex());
 
                                     try {
-                                        stage.setTitle("Añadir habitación");
+                                        stage.setTitle("➕Añadir habitación");
                                         AdminAddRoomController.idHabitacion = data.getRoomId();
                                         PanelLoginController.screenController.addScreen("adminaddroom", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/admin-addroom.fxml"))));
                                         PanelLoginController.screenController.removeScreen("admindashboard");
@@ -167,7 +167,7 @@ public class AdminDashboardController implements Initializable {
                     public TableCell<RoomModel, Void> call(final TableColumn<RoomModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Eliminar");
+                            private final Button btn = new Button("❌Eliminar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -251,7 +251,7 @@ public class AdminDashboardController implements Initializable {
                     public TableCell<ReceptionModel, Void> call(final TableColumn<ReceptionModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Alta");
+                            private final Button btn = new Button("➕Alta");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -301,7 +301,7 @@ public class AdminDashboardController implements Initializable {
                     public TableCell<ReceptionModel, Void> call(final TableColumn<ReceptionModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Eliminar");
+                            private final Button btn = new Button("❌Eliminar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -373,7 +373,7 @@ public class AdminDashboardController implements Initializable {
     }
 
     public void AddRoom() throws IOException {
-        stage.setTitle("Añadir habitación");
+        stage.setTitle("➕Añadir habitación");
         stage.setWidth(600);
         stage.setHeight(600);
         PanelLoginController.screenController.addScreen("adminaddroom", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/admin-addroom.fxml"))));

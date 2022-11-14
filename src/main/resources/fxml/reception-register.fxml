@@ -17,7 +17,7 @@
     </padding>
     <ButtonBar prefHeight="40.0" prefWidth="200.0">
         <buttons>
-            <Label text="Recepción añadir cliente" />
+            <Label text="➕Recepción añadir cliente" />
         </buttons></ButtonBar>
     <GridPane prefHeight="299.0" prefWidth="760.0">
         <columnConstraints>

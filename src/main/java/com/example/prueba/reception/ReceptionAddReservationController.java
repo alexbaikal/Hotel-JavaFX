@@ -420,9 +420,11 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
 
     public void GoBack (ActionEvent actionEvent) throws IOException {
+        idReserva = 0;
         screenController.addScreen("receptiondashboard", FXMLLoader.load(getClass().getResource( "/fxml/reception-dashboard.fxml" )));
         screenController.removeScreen("receptionaddclient");
         screenController.activate("receptiondashboard");
+
     }
 
 

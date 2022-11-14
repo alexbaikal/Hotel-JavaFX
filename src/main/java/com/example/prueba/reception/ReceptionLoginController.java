@@ -59,7 +59,7 @@ public class ReceptionLoginController {
         screenController.removeScreen("receptionlogin");
         stage.setWidth(1000);
         stage.setHeight(500);
-        stage.setTitle("Alta de recepcionista");
+        stage.setTitle("➕Alta de recepcionista");
         screenController.addScreen("receptionregister", FXMLLoader.load(getClass().getResource( "/fxml/reception-register.fxml" )));
         screenController.activate("receptionregister");
     }

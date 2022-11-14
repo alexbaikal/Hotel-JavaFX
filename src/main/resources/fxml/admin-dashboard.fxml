@@ -30,8 +30,8 @@
                            <TableColumn fx:id="nationalityCol" prefWidth="75.0" text="Nacionalidad" />
                            <TableColumn fx:id="phoneCol" prefWidth="75.0" text="Teléfono" />
                            <TableColumn fx:id="emailCol" prefWidth="75.0" text="Email" />
-                           <TableColumn fx:id="editCol" prefWidth="94.0" text="Editar" />
-                           <TableColumn fx:id="deleteCol" prefWidth="94.0" text="Eliminar" />
+                           <TableColumn fx:id="editCol" prefWidth="94.0" text="✏Editar" />
+                           <TableColumn fx:id="deleteCol" prefWidth="94.0" text="❌Eliminar" />
 
                        </columns>
                      </TableView>
@@ -51,8 +51,8 @@
                            <TableColumn fx:id="typeCol" prefWidth="110.0" text="Tipus" />
                            <TableColumn fx:id="priceCol" prefWidth="67.0" text="Preu" />
                            <TableColumn fx:id="characteristicsCol" prefWidth="157.0" text="Característiques" />
-                           <TableColumn fx:id="editRoomCol" prefWidth="62.0" text="Editar" />
-                           <TableColumn fx:id="deleteRoomCol" prefWidth="59.0" text="Eliminar" />
+                           <TableColumn fx:id="editRoomCol" prefWidth="62.0" text="✏Editar" />
+                           <TableColumn fx:id="deleteRoomCol" prefWidth="59.0" text="❌Eliminar" />
                         </columns>
                      </TableView>
                   </children>
@@ -63,9 +63,9 @@
    </TabPane>
    <FlowPane prefHeight="63.0" prefWidth="760.0">
       <children>
-         <Button mnemonicParsing="false" onAction="#AddRoom" text="Añadir habitación" />
+         <Button mnemonicParsing="false" onAction="#AddRoom" text="➕Añadir habitación" />
       
-         <Button mnemonicParsing="false" onAction="#LogOut" text="Cerrar sesión" />
+         <Button mnemonicParsing="false" onAction="#LogOut" text="➡Cerrar sesión" />
       </children>
    </FlowPane>
 </VBox>

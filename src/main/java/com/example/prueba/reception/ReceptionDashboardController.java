@@ -183,14 +183,14 @@ public class ReceptionDashboardController implements Initializable {
                     public TableCell<ReservaDataModel, Void> call(final TableColumn<ReservaDataModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Editar");
+                            private final Button btn = new Button("✏Editar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
                                     ReservaDataModel data = getTableView().getItems().get(getIndex());
 
                                     try {
-                                        stage.setTitle("Editar reserva");
+                                        stage.setTitle("✏Editar reserva");
                                         ReceptionAddReservationController.idReserva = data.getId_reserva();
                                         PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
                                         PanelLoginController.screenController.removeScreen("receptiondashboard");
@@ -222,7 +222,7 @@ public class ReceptionDashboardController implements Initializable {
                     public TableCell<ReservaDataModel, Void> call(final TableColumn<ReservaDataModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Eliminar");
+                            private final Button btn = new Button("❌Eliminar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -318,7 +318,7 @@ public class ReceptionDashboardController implements Initializable {
                     public TableCell<ClientModel, Void> call(final TableColumn<ClientModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Editar");
+                            private final Button btn = new Button("✏Editar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -326,7 +326,7 @@ public class ReceptionDashboardController implements Initializable {
 
 
                                     try {
-                                        stage.setTitle("Editar cliente");
+                                        stage.setTitle("✏Editar cliente");
                                         ReceptionAddClientController.idCliente = data.getId();
                                         PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
                                         PanelLoginController.screenController.removeScreen("receptiondashboard");
@@ -359,7 +359,7 @@ public class ReceptionDashboardController implements Initializable {
                     public TableCell<ClientModel, Void> call(final TableColumn<ClientModel, Void> param) {
                         return new TableCell<>() {
 
-                            private final Button btn = new Button("Eliminar");
+                            private final Button btn = new Button("❌Eliminar");
 
                             {
                                 btn.setOnAction((ActionEvent event) -> {
@@ -420,14 +420,14 @@ public class ReceptionDashboardController implements Initializable {
     }
 
     public void AddClient() throws IOException {
-        stage.setTitle("Añadir cliente");
+        stage.setTitle("➕Añadir cliente");
         PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
         PanelLoginController.screenController.removeScreen("receptiondashboard");
         PanelLoginController.screenController.activate("receptionaddclient");
     }
 
     public void AddReservation() throws IOException {
-        stage.setTitle("Añadir reserva");
+        stage.setTitle("➕Añadir reserva");
         PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
         PanelLoginController.screenController.removeScreen("receptiondashboard");
         PanelLoginController.screenController.activate("receptionaddreservation");

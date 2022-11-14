@@ -19,7 +19,7 @@
 </padding>
 <ButtonBar prefHeight="40.0" prefWidth="200.0">
     <buttons>
-        <Label text="Recepción añadir cliente" />
+        <Label text="➕Recepción añadir cliente" />
     </buttons></ButtonBar>
    <GridPane prefHeight="509.0" prefWidth="760.0">
      <columnConstraints>
@@ -121,7 +121,7 @@
    </GridPane>
    <FlowPane prefHeight="44.0" prefWidth="760.0">
       <children>
-         <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="⬅ Atrás" />
+         <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="🔙Atrás" />
       
       <Button alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddReservation" fx:id="addButton" text="➕ Añadir reserva" />
       </children>

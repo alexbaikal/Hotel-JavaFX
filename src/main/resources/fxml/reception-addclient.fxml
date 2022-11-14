@@ -17,7 +17,7 @@
 </padding>
 <ButtonBar prefHeight="40.0" prefWidth="200.0">
     <buttons>
-        <Label text="Recepción añadir cliente" />
+        <Label text="➕Recepción añadir cliente" />
     </buttons></ButtonBar>
    <GridPane prefHeight="299.0" prefWidth="760.0">
      <columnConstraints>
@@ -76,8 +76,8 @@
    <FlowPane prefHeight="44.0" prefWidth="760.0">
       <children>
       
-      <Button fx:id="addButton" alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="Añadir cliente" />
-         <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="Atrás" />
+      <Button fx:id="addButton" alignment="CENTER" focusTraversable="false" onAction="#ReceptionAddClient" text="➕Añadir cliente" />
+         <Button alignment="CENTER" focusTraversable="false" onAction="#GoBack" text="🔙Atrás" />
       </children>
    </FlowPane>
 </VBox>

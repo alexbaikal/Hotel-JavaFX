@@ -77,7 +77,7 @@ public class ReceptionRegisterController {
                 preparedStatement.setInt(9, 0);
                 try {
                     preparedStatement.executeUpdate();
-                    Utils.showAlert(Alert.AlertType.INFORMATION, "Dado de alta correctamente!", "Espera de alta recepcionista");
+                    Utils.showAlert(Alert.AlertType.INFORMATION, "Dado de alta correctamente! ➕", "Espera de alta recepcionista");
                     screenController.removeScreen("receptionregister");
                     stage.setWidth(400);
                     stage.setHeight(450);
