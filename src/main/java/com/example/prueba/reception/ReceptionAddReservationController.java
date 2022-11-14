@@ -166,7 +166,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
         while (resultSet.next()) {
             //check if disponibilidad is "Disponible"
             boolean checkDisponibility;
-            if (Integer.parseInt(idHabitacion) != 0 ) {
+            if (idHabitacion != null && Integer.parseInt(idHabitacion) != 0 ) {
                 checkDisponibility = resultSet.getInt("id_habitacion") == Integer.parseInt(idHabitacion);
             }
             else {
@@ -207,13 +207,16 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
         });
 
         //if idRecepcionista != 0, set textfield to idRecepcionista from receptionists list if includes idRecepcionista
-        if (Integer.parseInt(idRecepcionista) != 0) {
-            for (String receptionist : receptionists) {
-                if (receptionist.toLowerCase().contains(String.valueOf(idRecepcionista).toLowerCase())) {
-                    receptionistSearchField.setText(receptionist);
+        if (idRecepcionista != null) {
+            if (Integer.parseInt(idRecepcionista) != 0) {
+                for (String receptionist : receptionists) {
+                    if (receptionist.toLowerCase().contains(String.valueOf(idRecepcionista).toLowerCase())) {
+                        receptionistSearchField.setText(receptionist);
+                    }
                 }
             }
         }
+
 
         //add listener to listview, on click, show selected item in searchfield
         receptionistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -240,7 +243,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
             });
 
         //if idHabitacion != 0, set textfield to idHabitacion from rooms list if includes idHabitacion
-        if (Integer.parseInt(idHabitacion) != 0) {
+        if (idHabitacion != null && Integer.parseInt(idHabitacion) != 0) {
             for (String room : rooms) {
                 if (room.toLowerCase().contains(String.valueOf(idHabitacion).toLowerCase())) {
                     roomSearchField.setText(room);
@@ -319,7 +322,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                 }
             });
             //if idCliente != 0, set textfield to idCliente from clients list if includes idCliente
-            if (Integer.parseInt(idCliente) != 0) {
+            if (idCliente != null && Integer.parseInt(idCliente) != 0) {
                 for (String client : clients) {
                     if (client.toLowerCase().contains(String.valueOf(idCliente).toLowerCase())) {
                         clientSearchField.setText(client);
