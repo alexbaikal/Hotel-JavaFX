@@ -94,6 +94,7 @@ public class ReceptionAddClientController implements Initializable {
                 if (idCliente != 0) {
                     alertMsg = "Cliente actualizado correctamente!";
                     sql = "UPDATE clientes SET name_cliente = ?, surname_cliente = ?, DNI_cliente = ?, nationality_cliente = ?, phone_cliente = ?, email_cliente = ?, occupation_cliente = ?, civilstate_cliente = ? WHERE id_cliente = "+idCliente;
+                    idCliente = 0;
                 } else {
                     alertMsg = "Cliente añadido correctamente!";
                     sql = "INSERT INTO clientes (name_cliente, surname_cliente, DNI_cliente, nationality_cliente, phone_cliente, email_cliente, occupation_cliente, civilstate_cliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
