@@ -93,7 +93,27 @@ public class AdminDashboardController implements Initializable {
             ResultSet resultSet = preparedStatement.executeQuery();
             roomList = new ArrayList<>();
             while (resultSet.next()) {
-                RoomModel roomModel = new RoomModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
+                //get reserva start date and end date where id_habitacion = resultSet.getInt(1)
+                //("Disponible", "Ocupada", "En manteniment");
+                String sql2 = "SELECT * FROM reserva WHERE id_habitacion = ?";
+                PreparedStatement preparedStatement2 = connection().prepareStatement(sql2);
+                preparedStatement2.setInt(1, resultSet.getInt(1));
+                ResultSet resultSet2 = preparedStatement2.executeQuery();
+                String availability = "Disponible";
+                while (resultSet2.next()) {
+                    if (Utils.isBetween(resultSet2.getDate(5), resultSet2.getDate(6))) {
+                        availability = "Ocupada";
+                    }
+                }
+
+                RoomModel roomModel = new RoomModel(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        availability,
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6));
                 roomList.add(roomModel);
             }
             connection().close();

@@ -42,7 +42,6 @@ public class AdminLoginController {
                 preparedStatement.setString(2, adminPassword);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    Utils.showAlert(Alert.AlertType.INFORMATION, "Inicio de sesión.", "Iniciado sesión correctamente!");
                     stage.setWidth(850);
                     stage.setHeight(400);
                     PanelLoginController.screenController.removeScreen("adminlogin");

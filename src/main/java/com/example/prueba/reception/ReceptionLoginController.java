@@ -38,7 +38,6 @@ public class ReceptionLoginController {
                 preparedStatement.setString(2, receptionPassword);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    Utils.showAlert(Alert.AlertType.INFORMATION, "Iniciado correctamente!", "Sesión iniciada correctamente");
                     screenController.removeScreen("receptionlogin");
                     stage.setWidth(1000);
                     stage.setHeight(500);

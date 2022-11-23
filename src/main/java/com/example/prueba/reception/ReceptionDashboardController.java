@@ -136,7 +136,9 @@ public class ReceptionDashboardController implements Initializable {
                     //set the values
                     reservaDataModel.setFecha_inicio_string(dateStart);
                     reservaDataModel.setFecha_final_string(dateEnd);
+                }
 
+                /*
                     //if dateEnd is the same or before today, then set disponibilidad column of habitacion table to "Disponible"
                     if (dateEnd.compareTo(LocalDate.now().toString()) <= 0) {
                         String sql5 = "UPDATE habitacion SET disponibilidad = ? WHERE id_habitacion = ?";
@@ -145,7 +147,7 @@ public class ReceptionDashboardController implements Initializable {
                         preparedStatement5.setInt(2, reservaDataModel.getId_habitacion());
                         preparedStatement5.executeUpdate();
                     }
-                }
+                } */
                 //fetch price
                 String sql5 = "SELECT costo FROM reserva WHERE id_reserva = ?";
                 PreparedStatement preparedStatement5 = connection().prepareStatement(sql5);
@@ -260,13 +262,13 @@ public class ReceptionDashboardController implements Initializable {
             PreparedStatement preparedStatement = connection().prepareStatement(sql);
             preparedStatement.setInt(1, data.getId_reserva());
             preparedStatement.executeUpdate();
-
+/*
             String sql2 = "UPDATE habitacion SET disponibilidad = ? WHERE id_habitacion = ?";
             PreparedStatement preparedStatement2 = connection().prepareStatement(sql2);
             preparedStatement2.setString(1, "Disponible");
             preparedStatement2.setInt(2, data.getId_habitacion());
             preparedStatement2.executeUpdate();
-
+*/
 
             connection().close();
             //refresh the table

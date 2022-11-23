@@ -33,8 +33,6 @@ public class AdminAddRoomController implements Initializable {
     public TextField priceField;
     @FXML
     public TextField characteristicsField;
-    @FXML
-    public ComboBox<String> availabilityDropdown;
 
 
 
@@ -54,7 +52,6 @@ public class AdminAddRoomController implements Initializable {
                 if (resultSet.next()) {
                     numRoomField.setText(resultSet.getString("num_habitacion"));
                     floorField.setText(resultSet.getString("planta"));
-                    availabilityDropdown.getSelectionModel().select(resultSet.getString("disponibilidad"));
                     typeDropdown.getSelectionModel().select(resultSet.getString("tipo"));
                     priceField.setText(resultSet.getString("precio"));
                     characteristicsField.setText(resultSet.getString("caracteristicas"));
@@ -84,14 +81,12 @@ public class AdminAddRoomController implements Initializable {
             }
         });
 
-        availabilityDropdown.getItems().addAll("Disponible", "Ocupada", "En manteniment");
         typeDropdown.getItems().addAll("Individual", "Doble", "Familiar");
     }
 
     public void AddRoom() {
         String numRoomFieldText = numRoomField.getText();
         String floorFieldText = floorField.getText();
-        String availabilityDropdownText = availabilityDropdown.getValue();
         String typeFieldText = typeDropdown.getValue();
         String priceFieldText = priceField.getText();
         String characteristicsFieldText = characteristicsField.getText();
@@ -126,15 +121,14 @@ public class AdminAddRoomController implements Initializable {
             } else {
                 //update room in database
                 if (idHabitacion != 0) {
-                    String sql = "UPDATE habitacion SET num_habitacion = ?, planta = ?, disponibilidad = ?, tipo = ?, precio = ?, caracteristicas = ? WHERE id_habitacion = ?";
+                    String sql = "UPDATE habitacion SET num_habitacion = ?, planta = ?, tipo = ?, precio = ?, caracteristicas = ? WHERE id_habitacion = ?";
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1, numRoomFieldText);
                     preparedStatement.setString(2, floorFieldText);
-                    preparedStatement.setString(3, availabilityDropdownText);
-                    preparedStatement.setString(4, typeFieldText);
-                    preparedStatement.setString(5, priceFieldText);
-                    preparedStatement.setString(6, characteristicsFieldText);
-                    preparedStatement.setInt(7, idHabitacion);
+                    preparedStatement.setString(3, typeFieldText);
+                    preparedStatement.setString(4, priceFieldText);
+                    preparedStatement.setString(5, characteristicsFieldText);
+                    preparedStatement.setInt(6, idHabitacion);
                     preparedStatement.executeUpdate();
                     Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Habitación actualizada correctamente");
                     //go back to admin panel
@@ -144,14 +138,13 @@ public class AdminAddRoomController implements Initializable {
                     PanelLoginController.screenController.removeScreen("adminaddroom");
                     PanelLoginController.screenController.activate("admindashboard");
                 } else {
-                    String sql = "INSERT INTO habitacion (num_habitacion, planta, disponibilidad, tipo, precio, caracteristicas) VALUES (?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO habitacion (num_habitacion, planta, tipo, precio, caracteristicas) VALUES (?, ?, ?, ?, ?)";
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1, numRoomFieldText);
                     preparedStatement.setString(2, floorFieldText);
-                    preparedStatement.setString(3, availabilityDropdownText);
-                    preparedStatement.setString(4, typeFieldText);
-                    preparedStatement.setString(5, priceFieldText);
-                    preparedStatement.setString(6, characteristicsFieldText);
+                    preparedStatement.setString(3, typeFieldText);
+                    preparedStatement.setString(4, priceFieldText);
+                    preparedStatement.setString(5, characteristicsFieldText);
                     preparedStatement.executeUpdate();
                     Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", "Habitación añadida correctamente");
                     //go back to admin panel

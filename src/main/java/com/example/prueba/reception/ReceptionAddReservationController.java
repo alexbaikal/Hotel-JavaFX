@@ -158,19 +158,34 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
         Connection connection = DBConnection.getConnections();
         //get list of receptionists (id_recepcionista, nombre_recepcionista) from database
-        String recepcionistaQuery = "SELECT id_habitacion, num_habitacion, planta, disponibilidad, tipo, precio FROM habitacion";
+        String recepcionistaQuery = "SELECT id_habitacion, num_habitacion, planta, tipo, precio FROM habitacion";
         PreparedStatement preparedStatement = connection.prepareStatement(recepcionistaQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
 
 
         while (resultSet.next()) {
             //check if disponibilidad is "Disponible"
+
+
             boolean checkDisponibility;
             if (idHabitacion != null && Integer.parseInt(idHabitacion) != 0 ) {
                 checkDisponibility = resultSet.getInt("id_habitacion") == Integer.parseInt(idHabitacion);
             }
             else {
-                checkDisponibility = resultSet.getString("disponibilidad").equals("Disponible");
+                //select everything from reservas where id_habitacion = resultSet.getString("id_habitacion")
+                String sql = "SELECT * FROM reserva WHERE id_habitacion = ?";
+                PreparedStatement preparedStatement1 = connection.prepareStatement(sql);
+                preparedStatement1.setString(1, resultSet.getString("id_habitacion"));
+                ResultSet resultSet1 = preparedStatement1.executeQuery();
+                if (resultSet1.next()) {
+                    //check if startDate is between fecha_inicio and fecha_final
+                    Date startDB = resultSet1.getDate("fecha_inicio");
+                    Date endDB = resultSet1.getDate("fecha_final");
+                    checkDisponibility = Utils.isBetween(startDB, endDB);
+                }
+                else {
+                    checkDisponibility = true;
+                }
             }
             if (checkDisponibility) {
                 //add room to list
@@ -381,6 +396,8 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                 if (idReserva != 0) {
                     message = "Reserva actualizada correctamente!";
                     query = "UPDATE reserva SET id_cliente = ?, id_recepcionista = ?, id_habitacion = ?, fecha_inicio = ?, fecha_final = ?, costo = ?, estado = ? WHERE id_reserva = "+idReserva;
+                    idReserva = 0;
+
                 } else {
                     message = "Reserva agregada correctamente!";
                     query = "INSERT INTO reserva (id_cliente, id_recepcionista, id_habitacion, fecha_inicio, fecha_final, costo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -396,12 +413,12 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                 preparedStatement.setString(7, "Checked in");
                 preparedStatement.executeUpdate();
 
-                //query id_habitacion in habitacion and set disponibilidad to "Ocupada"
+              /*  //query id_habitacion in habitacion and set disponibilidad to "Ocupada"
                 String query2 = "UPDATE habitacion SET disponibilidad = 'Ocupada' WHERE id_habitacion = ?";
                 PreparedStatement preparedStatement2 = connection.prepareStatement(query2);
                 preparedStatement2.setString(1, id_habitacion);
                 preparedStatement2.executeUpdate();
-
+*/
 
 
                 Utils.showAlert(Alert.AlertType.INFORMATION, "Éxito", message);
