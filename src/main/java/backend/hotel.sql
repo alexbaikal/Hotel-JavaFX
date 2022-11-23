@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2022 at 01:17 PM
+-- Generation Time: Nov 23, 2022 at 01:26 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -77,7 +77,6 @@ CREATE TABLE `habitacion` (
   `id_habitacion` int(15) NOT NULL,
   `num_habitacion` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `planta` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `disponibilidad` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `tipo` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `precio` int(10) NOT NULL,
   `caracteristicas` varchar(100) COLLATE utf8_unicode_ci NOT NULL
@@ -87,10 +86,10 @@ CREATE TABLE `habitacion` (
 -- Dumping data for table `habitacion`
 --
 
-INSERT INTO `habitacion` (`id_habitacion`, `num_habitacion`, `planta`, `disponibilidad`, `tipo`, `precio`, `caracteristicas`) VALUES
-(1, '3', '1', 'Disponible', 'Familiar', 0, 'Tiene manchas en la alfombra.'),
-(1116, '5', '4', 'Ocupada', 'Individual', 20, 'Sin características.'),
-(1118, '6', '2', 'Disponible', 'Individual', 30, 'Nova.');
+INSERT INTO `habitacion` (`id_habitacion`, `num_habitacion`, `planta`, `tipo`, `precio`, `caracteristicas`) VALUES
+(1, '3', '1', 'Familiar', 0, 'Tiene manchas en la alfombra.'),
+(1116, '5', '4', 'Individual', 20, 'Sin características.'),
+(1118, '6', '2', 'Individual', 30, 'Nova.');
 
 -- --------------------------------------------------------
 
@@ -141,9 +140,9 @@ CREATE TABLE `reserva` (
 --
 
 INSERT INTO `reserva` (`id_reserva`, `id_cliente`, `id_recepcionista`, `id_habitacion`, `fecha_inicio`, `fecha_final`, `costo`, `estado`) VALUES
-(42, 9, 1, 1, '2022-10-21', '2022-11-06', 26, 'Checked in'),
-(43, 8, 1, 1, '2022-10-22', '2022-10-27', 101, 'Checked in'),
-(44, 1, 1, 1118, '2022-10-21', '2022-10-22', 202, 'Checked in');
+(42, 9, 1, 1, '2022-10-21', '2022-12-06', 260, 'Checked in'),
+(43, 7, 1, 1, '2022-10-22', '2022-10-27', 1018, 'Checked in'),
+(45, 1, 8, 1118, '2022-12-03', '2022-12-10', 300, 'Checked in');
 
 --
 -- Indexes for dumped tables
@@ -220,7 +219,7 @@ ALTER TABLE `recepcionista`
 -- AUTO_INCREMENT for table `reserva`
 --
 ALTER TABLE `reserva`
-  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
