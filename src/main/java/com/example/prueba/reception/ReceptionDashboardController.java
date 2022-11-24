@@ -1,5 +1,6 @@
 package com.example.prueba.reception;
 
+import backend.Utils;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
 import com.example.prueba.models.ReservaDataModel;
@@ -406,6 +407,8 @@ public class ReceptionDashboardController implements Initializable {
             clientTable.getItems().clear();
             addClientsToTable();
         } catch (SQLException e) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Error", "No se ha podido eliminar el cliente porque tiene reservas a su nombre");
+
             e.printStackTrace();
         }
     }

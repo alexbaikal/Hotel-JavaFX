@@ -206,6 +206,7 @@ public class AdminDashboardController implements Initializable {
                                         roomsTable.getItems().clear();
                                         initialize(location, resources);
                                     } catch (SQLException e) {
+                                        Utils.showAlert(Alert.AlertType.ERROR, "Error", "No se ha podido eliminar la habitación porque tiene reservas a su nombre");
                                         e.printStackTrace();
                                     }
                                 });
@@ -340,6 +341,7 @@ public class AdminDashboardController implements Initializable {
                                         receptionTable.getItems().clear();
                                         initialize(location, resources);
                                     } catch (SQLException e) {
+                                        Utils.showAlert(Alert.AlertType.ERROR, "Error", "No se ha podido eliminar el recepcionista porque tiene reservas a su nombre");
                                         e.printStackTrace();
                                     }
                                 });

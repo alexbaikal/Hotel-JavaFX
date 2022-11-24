@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2022 at 01:26 PM
+-- Generation Time: Nov 24, 2022 at 01:22 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -116,7 +116,8 @@ CREATE TABLE `recepcionista` (
 
 INSERT INTO `recepcionista` (`id_recepcionista`, `name_recepcionista`, `surname_recepcionista`, `DNI_recepcionista`, `nationality_recepcionista`, `phone_recepcionista`, `email_recepcionista`, `username`, `password`, `active_recepcionista`) VALUES
 (1, 'juan', 'garcía Melendez', '06362696E', 'Ecuador', '+34644674246', 'dfgshdrh@hrsh.weg', '1', '1', 1),
-(8, 'Pepe', 'Grillo Marasd', '86934529A', 'Esoala', '+35261623644', 'asfaheh@afadsgf.asd', '2', '2', 1);
+(8, 'Pepe', 'Grillo Marasd', '86934529A', 'Esoala', '+35261623644', 'asfaheh@afadsgf.asd', '2', '2', 1),
+(11, 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 1);
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,7 @@ CREATE TABLE `reserva` (
 INSERT INTO `reserva` (`id_reserva`, `id_cliente`, `id_recepcionista`, `id_habitacion`, `fecha_inicio`, `fecha_final`, `costo`, `estado`) VALUES
 (42, 9, 1, 1, '2022-10-21', '2022-12-06', 260, 'Checked in'),
 (43, 7, 1, 1, '2022-10-22', '2022-10-27', 1018, 'Checked in'),
-(45, 1, 8, 1118, '2022-12-03', '2022-12-10', 300, 'Checked in');
+(47, 1, 11, 1, '2022-11-24', '2022-11-25', 123, 'Checked in');
 
 --
 -- Indexes for dumped tables
@@ -185,6 +186,7 @@ ALTER TABLE `reserva`
   ADD UNIQUE KEY `id_reserva` (`id_reserva`,`id_cliente`,`id_recepcionista`),
   ADD UNIQUE KEY `id_reserva_2` (`id_reserva`,`id_cliente`,`id_recepcionista`),
   ADD KEY `id_habitacion` (`id_habitacion`),
+  ADD KEY `id_recepcionista` (`id_recepcionista`),
   ADD KEY `id_cliente` (`id_cliente`);
 
 --
@@ -213,13 +215,25 @@ ALTER TABLE `habitacion`
 -- AUTO_INCREMENT for table `recepcionista`
 --
 ALTER TABLE `recepcionista`
-  MODIFY `id_recepcionista` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_recepcionista` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `reserva`
 --
 ALTER TABLE `reserva`
-  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id_reserva` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `reserva`
+--
+ALTER TABLE `reserva`
+  ADD CONSTRAINT `reserva_ibfk_1` FOREIGN KEY (`id_recepcionista`) REFERENCES `recepcionista` (`id_recepcionista`),
+  ADD CONSTRAINT `reserva_ibfk_2` FOREIGN KEY (`id_habitacion`) REFERENCES `habitacion` (`id_habitacion`),
+  ADD CONSTRAINT `reserva_ibfk_3` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
