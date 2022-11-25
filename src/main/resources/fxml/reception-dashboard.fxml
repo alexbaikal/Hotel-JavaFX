@@ -8,9 +8,11 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba.reception.ReceptionDashboardController">
     <padding>
@@ -26,12 +28,12 @@
                         <TableColumn fx:id="surnameCol" prefWidth="75.0" text="Cognoms" />
                         <TableColumn fx:id="dniCol" prefWidth="96.0" text="DNI" />
                         <TableColumn fx:id="nationalityCol" prefWidth="105.0" text="Nacionalitat" />
-                        <TableColumn fx:id="phoneCol" prefWidth="99.0" text="Telèfon" />
-                        <TableColumn fx:id="emailCol" prefWidth="116.0" text="e-mail" />
+                        <TableColumn fx:id="phoneCol" prefWidth="74.0" text="Telèfon" />
+                        <TableColumn fx:id="emailCol" prefWidth="141.0" text="e-mail" />
                         <TableColumn fx:id="occupationCol" prefWidth="99.0" text="Ocupació" />
-                        <TableColumn fx:id="civilStateCol" prefWidth="94.0" text="Estat civil" />
-                        <TableColumn fx:id="editClientCol" prefWidth="94.0" text="✏Editar" />
-                        <TableColumn fx:id="deleteCol" prefWidth="94.0" text="❌Eliminar" />
+                        <TableColumn fx:id="civilStateCol" prefWidth="74.0" text="Estat civil" />
+                        <TableColumn fx:id="editClientCol" prefWidth="75.0" text="✏Editar" />
+                        <TableColumn fx:id="deleteCol" text="❌Eliminar" />
                     </columns>
                 </TableView>
             </AnchorPane>
@@ -39,7 +41,7 @@
         <Tab text="Reserva d'habitacions">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="217.0" prefWidth="797.0">
             <children>
-               <TableView fx:id="reservationTable" prefHeight="246.0" prefWidth="960.0">
+               <TableView fx:id="reservationTable" layoutY="32.0" prefHeight="214.0" prefWidth="960.0">
                   <columns>
                      <TableColumn fx:id="numCol" prefWidth="51.0" text="Numero" />
                      <TableColumn fx:id="clientCol" prefWidth="127.0" text="Cliente" />
@@ -47,10 +49,14 @@
                      <TableColumn fx:id="startDateCol" prefWidth="99.0" text="Data ingrés" />
                      <TableColumn fx:id="endDateCol" prefWidth="94.0" text="Data sortida" />
                      <TableColumn fx:id="priceCol" prefWidth="89.0" text="Preu" />
-                     <TableColumn fx:id="editReservationCol" prefWidth="62.0" text="✏Editar" />
-                     <TableColumn fx:id="deleteReservationCol" prefWidth="100.0" text="❌Eliminar" />
+                     <TableColumn fx:id="stateReservationCol" prefWidth="84.0" text="Estado" />
+                     <TableColumn fx:id="editReservationCol" prefWidth="95.0" text="✏Editar" />
+                     <TableColumn fx:id="deleteReservationCol" prefWidth="83.0" text="❌Eliminar" />
+                     <TableColumn fx:id="facturaReservationCol" prefWidth="84.0" text="Factura" />
                   </columns>
                </TableView>
+               <TextField fx:id="searchField" layoutY="2.0" prefHeight="25.0" prefWidth="393.0" promptText="Buscar por cliente, recepcionista o estado" />
+               <Text layoutX="393.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🔎" />
             </children></AnchorPane>
         </Tab>
     </TabPane>

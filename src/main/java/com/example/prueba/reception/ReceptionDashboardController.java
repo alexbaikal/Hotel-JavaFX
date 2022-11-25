@@ -8,18 +8,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.w3c.dom.Document;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.ResourceBundle;
 import static com.example.prueba.Main.stage;
 import static com.example.prueba.admin.AdminDashboardController.connection;
@@ -60,6 +71,8 @@ public class ReceptionDashboardController implements Initializable {
     @FXML
     private TableColumn<String, String> receptionistCol;
     @FXML
+    private TableColumn<String, String> stateReservationCol;
+    @FXML
     private TableColumn<String, String> startDateCol;
 
     @FXML
@@ -70,6 +83,10 @@ public class ReceptionDashboardController implements Initializable {
     private TableColumn <ReservaDataModel, Void> editReservationCol;
     @FXML
     private TableColumn <ReservaDataModel, Void> deleteReservationCol;
+    @FXML
+    private TableColumn<ReservaDataModel, Void> facturaReservationCol;
+    @FXML
+    private TextField searchField;
 
     //client list
     public static ArrayList<ReservaDataModel> reservesList;
@@ -82,11 +99,24 @@ public class ReceptionDashboardController implements Initializable {
 
         addClientsToTable();
 
-        addReservationsToTable();
+        addReservationsToTable(null);
+
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                addReservationsToTable(null);
+            } else {
+                addReservationsToTable(newValue);
+            }
+        });
 
     }
 
-    public void addReservationsToTable() {
+
+
+
+    public void addReservationsToTable(String searchTerm) {
+        reservationTable.getItems().clear();
 
         try {
             connection();
@@ -96,20 +126,18 @@ public class ReceptionDashboardController implements Initializable {
             ResultSet resultSet = preparedStatement.executeQuery();
             reservesList = new ArrayList<>();
             while (resultSet.next()) {
-                ReservaDataModel reservaDataModel = new ReservaDataModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
-                reservesList.add(reservaDataModel);
-            }
-
-            //create a loop for reservasList to fetch all the necessary data from database with the id's
-            for (ReservaDataModel reservaDataModel : reservesList) {
-                //fetch room number
-                String sql1 = "SELECT num_habitacion FROM habitacion WHERE id_habitacion = ?";
-                PreparedStatement preparedStatement1 = connection().prepareStatement(sql1);
-                preparedStatement1.setInt(1, reservaDataModel.getId_habitacion());
-                ResultSet resultSet1 = preparedStatement1.executeQuery();
-                while (resultSet1.next()) {
-                    reservaDataModel.setNumero_habitacion(resultSet1.getInt(1));
+                //get fecha inicio and fecha final (column indexes 5 and 6) in Date format
+                Date startDate = resultSet.getDate(5);
+                Date endDate = resultSet.getDate(6);
+                String estado_reserva = "Checked-out";
+                if (Utils.isBetween(startDate, endDate)) {
+                    estado_reserva = "Checked-in";
+                } else if (Utils.isBefore(startDate, endDate)) {
+                    estado_reserva = "Pendiente";
                 }
+
+                ReservaDataModel reservaDataModel = new ReservaDataModel(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), estado_reserva, resultSet.getString(7));
+
                 //fetch client name
                 String sql2 = "SELECT name_cliente, surname_cliente FROM clientes WHERE id_cliente = ?";
                 PreparedStatement preparedStatement2 = connection().prepareStatement(sql2);
@@ -126,6 +154,29 @@ public class ReceptionDashboardController implements Initializable {
                 while (resultSet3.next()) {
                     reservaDataModel.setNombre_recepcionista(resultSet3.getString(1) + " " + resultSet3.getString(2));
                 }
+
+                if (searchTerm != null) {
+                    System.out.println("nombre: "+reservaDataModel.getNombre_cliente());
+                    if (reservaDataModel.getEstado_reserva().toLowerCase().contains(searchTerm.toLowerCase()) ||reservaDataModel.getNombre_cliente().toLowerCase().contains(searchTerm.toLowerCase()) || reservaDataModel.getNombre_recepcionista().toLowerCase().contains(searchTerm.toLowerCase())) {
+                        reservesList.add(reservaDataModel);
+                    }
+                } else {
+                    reservesList.add(reservaDataModel);
+                }
+
+            }
+
+            //create a loop for reservasList to fetch all the necessary data from database with the id's
+            for (ReservaDataModel reservaDataModel : reservesList) {
+                //fetch room number
+                String sql1 = "SELECT num_habitacion FROM habitacion WHERE id_habitacion = ?";
+                PreparedStatement preparedStatement1 = connection().prepareStatement(sql1);
+                preparedStatement1.setInt(1, reservaDataModel.getId_habitacion());
+                ResultSet resultSet1 = preparedStatement1.executeQuery();
+                while (resultSet1.next()) {
+                    reservaDataModel.setNumero_habitacion(resultSet1.getInt(1));
+                }
+
                 //fetch start date and end date
                 String sql4 = "SELECT fecha_inicio, fecha_final FROM reserva WHERE id_reserva = ?";
                 PreparedStatement preparedStatement4 = connection().prepareStatement(sql4);
@@ -179,6 +230,7 @@ public class ReceptionDashboardController implements Initializable {
                 startDateCol.setCellValueFactory(new PropertyValueFactory<>("fecha_inicio_string"));
                 endDateCol.setCellValueFactory(new PropertyValueFactory<>("fecha_final_string"));
                 priceCol.setCellValueFactory(new PropertyValueFactory<>("precio"));
+                stateReservationCol.setCellValueFactory(new PropertyValueFactory<>("estado_reserva"));
 
                 //add edit button to the editReservationCol column
                 editReservationCol.setCellFactory(new Callback<>() {
@@ -218,6 +270,7 @@ public class ReceptionDashboardController implements Initializable {
                     }
                 });
 
+
                 //add delete button to the deleteCol column
 
                 deleteReservationCol.setCellFactory(new Callback<>() {
@@ -248,12 +301,57 @@ public class ReceptionDashboardController implements Initializable {
                     }
                 });
 
+                //add Factura button to the facturaReservationCol column
+                facturaReservationCol.setCellFactory(new Callback<>() {
+
+                    @Override
+                    public TableCell<ReservaDataModel, Void> call(final TableColumn<ReservaDataModel, Void> param) {
+                        return new TableCell<>() {
+
+                            private final Button btn = new Button("\uD83D\uDCDDGenerar PDF");
+
+                            {
+                                btn.setOnAction((ActionEvent event) -> {
+                                    ReservaDataModel data = getTableView().getItems().get(getIndex());
+                                    //generate a PDF based on data from the selected row
+                                    generatePDF(data);
+
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    setGraphic(btn);
+                                }
+                            }
+                        };
+                    }
+                });
+
                 reservationTable.getItems().add(reserva);
 
             }
 
 
         }
+
+    }
+
+    private void generatePDF(ReservaDataModel data) {
+        String fileName = data.getId_reserva()+".Factura_"+data.getNombre_cliente()+".pdf";
+        String nombreCliente = data.getNombre_cliente();
+        String nombreRecepcionista = data.getNombre_recepcionista();
+        Integer numeroHabitacion = data.getNumero_habitacion();
+        String fechaInicio = data.getFecha_inicio_string();
+        String fechaFinal = data.getFecha_final_string();
+        Integer precio = data.getPrecio();
+
+
+
 
     }
 
@@ -274,7 +372,7 @@ public class ReceptionDashboardController implements Initializable {
             connection().close();
             //refresh the table
             reservationTable.getItems().clear();
-            addReservationsToTable();
+            addReservationsToTable(null);
         } catch (SQLException e) {
             e.printStackTrace();
         }

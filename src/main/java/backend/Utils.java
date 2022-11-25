@@ -19,4 +19,9 @@ public class Utils extends Main {
         Date currentDate = new Date(System.currentTimeMillis());
         return currentDate.after(startDate) && currentDate.before(endDate);
     }
+
+    public static boolean isBefore(Date startDate, Date endDate) {
+        Date currentDate = new Date(System.currentTimeMillis());
+        return currentDate.before(startDate) && currentDate.before(endDate);
+    }
 }

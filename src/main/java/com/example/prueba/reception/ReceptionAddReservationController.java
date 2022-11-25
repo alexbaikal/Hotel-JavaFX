@@ -186,9 +186,21 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
             //check if disponibilidad is "Disponible"
 
 
-            boolean checkDisponibility;
+            boolean checkDisponibility = true;
             if (idHabitacion != null && Integer.parseInt(idHabitacion) != 0 ) {
-                checkDisponibility = resultSet.getInt("id_habitacion") == Integer.parseInt(idHabitacion);
+                //check if id_habitacion is in reserva id_habitacion reserva table and fecha_inicio and fecha_final is between startDate and endDate
+                Connection connection1 = DBConnection.getConnections();
+                String sql = "SELECT * FROM reserva WHERE id_habitacion = ? AND fecha_inicio BETWEEN ? AND ? AND fecha_final BETWEEN ? AND ?";
+                PreparedStatement preparedStatement1 = connection1.prepareStatement(sql);
+                preparedStatement1.setInt(1, resultSet.getInt("id_habitacion"));
+                preparedStatement1.setString(2, startDate.getValue().toString());
+                preparedStatement1.setString(3, endDate.getValue().toString());
+                preparedStatement1.setString(4, startDate.getValue().toString());
+                preparedStatement1.setString(5, endDate.getValue().toString());
+                ResultSet resultSet1 = preparedStatement1.executeQuery();
+                if (resultSet1.next()) {
+                    checkDisponibility = false;
+                }
             }
             else {
                 //select everything from reservas where id_habitacion = resultSet.getString("id_habitacion")
@@ -198,13 +210,17 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                 ResultSet resultSet1 = preparedStatement1.executeQuery();
                 if (resultSet1.next()) {
                     //check if startDate is between fecha_inicio and fecha_final
-                    Date startDB = resultSet1.getDate("fecha_inicio");
-                    Date endDB = resultSet1.getDate("fecha_final");
-                    checkDisponibility = Utils.isBetween(startDB, endDB);
+                    if (startDate.getValue() != null && endDate.getValue() != null) {
+                        if (startDate.getValue().isAfter(LocalDate.parse(resultSet1.getString("fecha_inicio"))) && startDate.getValue().isBefore(LocalDate.parse(resultSet1.getString("fecha_final")))) {
+                            checkDisponibility = false;
+                        }
+                        //check if endDate is between fecha_inicio and fecha_final
+                        if (endDate.getValue().isAfter(LocalDate.parse(resultSet1.getString("fecha_inicio"))) && endDate.getValue().isBefore(LocalDate.parse(resultSet1.getString("fecha_final")))) {
+                            checkDisponibility = false;
+                        }
+                    }
                 }
-                else {
-                    checkDisponibility = true;
-                }
+
             }
             if (checkDisponibility) {
                 //add room to list
@@ -385,6 +401,11 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
         LocalDate start = LocalDate.parse(startDate.getValue().toString());
         LocalDate end = LocalDate.parse(endDate.getValue().toString());
+
+        //LocalDate to Date
+        Date startDateDate = Date.valueOf(start);
+        Date endDateDate = Date.valueOf(end);
+
             String id_cliente;
             String id_habitacion;
         try {
@@ -405,9 +426,23 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
             try {
             Connection connection = DBConnection.getConnections();
-            if (clientSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || start == null || end == null || cost.isEmpty()) {
+
+            //check if the room in a reservation is available (if start date and end date of the reservation is between start date and end date of the reservation)
+            String checkRoomQuery = "SELECT * FROM reserva WHERE id_habitacion = ? AND ((? BETWEEN fecha_inicio AND fecha_final) OR (? BETWEEN fecha_inicio AND fecha_final))";
+            PreparedStatement preparedStatement1 = connection.prepareStatement(checkRoomQuery);
+            preparedStatement1.setString(1, id_habitacion);
+            preparedStatement1.setDate(2, startDateDate);
+            preparedStatement1.setDate(3, endDateDate);
+            ResultSet resultSet = preparedStatement1.executeQuery();
+
+
+
+            if (clientSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || startDate == null || endDate == null || cost.isEmpty()) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
-            } else {
+            } else if (resultSet.next()) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Error", "La habitación no está disponible en las fechas seleccionadas!");
+            }
+            else {
                 String query;
                 String message;
 
