@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,28 +36,46 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
     DatePicker endDate;
 
     @FXML
-    public ListView<String> receptionistListView;
-    @FXML
     public ListView<String> roomListView;
     @FXML
     public ListView<String> clientListView;
     @FXML
     Button addButton;
+    @FXML
+    Text recepcionistaText;
 
     //create list of receptionists
-    List<String> receptionists;
+  //  List<String> receptionists;
     List<String> rooms;
     List<String> clients;
 
     public static int idReserva;
 
-    private String idRecepcionista;
+   // private String idRecepcionista;
     private String idHabitacion;
     private String idCliente;
+
+    private Integer id_recepcionista;
 
     //crete initialize method
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        id_recepcionista = ReceptionLoginController.idRecepcionista;
+
+        //get name_recepcionista from repepcionista where id_recepcionista = id_recepcionista
+        try {
+            Connection connection = DBConnection.getConnections();
+            String sql = "SELECT name_recepcionista FROM recepcionista WHERE id_recepcionista = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id_recepcionista);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                recepcionistaText.setText(resultSet.getString("name_recepcionista"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         if (idReserva != 0) {
             addButton.setText("Actualizar");
             try {
@@ -69,7 +88,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                     startDate.setValue(LocalDate.parse(resultSet.getString("fecha_inicio")));
                     endDate.setValue(LocalDate.parse(resultSet.getString("fecha_final")));
                     costField.setText(String.valueOf(resultSet.getInt("costo")));
-                    idRecepcionista = resultSet.getString("id_recepcionista");
+                    //idRecepcionista = resultSet.getString("id_recepcionista");
                     idHabitacion = resultSet.getString("id_habitacion");
                     idCliente = resultSet.getString("id_cliente");
                 }
@@ -82,10 +101,10 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
         try {
             //get receptionist list
-            receptionists = getReceptionistsFromDB();
+          //  receptionists = getReceptionistsFromDB();
 
             //set receptionists to listview
-            setReceptionistsField(receptionists);
+          //  setReceptionistsField(receptionists);
 
             //get room list
             rooms = getRoomsFromDB();
@@ -205,7 +224,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
         return new ArrayList<>(roomsFromDB);
     }
 
-    private void setReceptionistsField(List<String> receptionists) {
+ /*   private void setReceptionistsField(List<String> receptionists) {
 
         //add listview to receptionistlistview
         receptionistListView.getItems().addAll(receptionists);
@@ -240,7 +259,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                     receptionistListView.getItems().addAll(receptionists);
         });
 
-    }
+    } */
     private void setRoomsField(List<String> rooms) {
 
             //add listview to roomlistview
@@ -272,14 +291,15 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                     roomListView.getItems().addAll(rooms);
             });
     }
-    private List<String> getReceptionistsFromDB() throws SQLException {
+  /*  private List<String> getReceptionistsFromDB() throws SQLException {
 
         List<String> receptionistsFromDb = new ArrayList<>();
 
         Connection connection = DBConnection.getConnections();
         //get list of receptionists (id_recepcionista, nombre_recepcionista) from database
-        String recepcionistaQuery = "SELECT id_recepcionista, name_recepcionista, surname_recepcionista FROM recepcionista";
+        String recepcionistaQuery = "SELECT id_recepcionista, name_recepcionista, surname_recepcionista FROM recepcionista WHERE id_recepcionista = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(recepcionistaQuery);
+        preparedStatement.setInt(1, id_recepcionista);
         ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -296,7 +316,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
         return new ArrayList<>(receptionistsFromDb);
     }
-
+*/
     private List<String> getClientsFromDB() throws SQLException {
 
         List<String> clientsFromDb = new ArrayList<>();
@@ -359,22 +379,20 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
 
         String clientField = clientSearchField.getText();
-        String receptionistField = receptionistSearchField.getText();
+      //  String receptionistField = receptionistSearchField.getText();
         String roomField = roomSearchField.getText();
         String cost = costField.getText();
 
         LocalDate start = LocalDate.parse(startDate.getValue().toString());
         LocalDate end = LocalDate.parse(endDate.getValue().toString());
             String id_cliente;
-            String id_recepcionista;
             String id_habitacion;
         try {
             id_cliente = clientField.substring(0, clientField.indexOf(":"));
-            id_recepcionista = receptionistField.substring(0, receptionistField.indexOf(":"));
             id_habitacion = roomField.substring(0, roomField.indexOf(":"));
         } catch (StringIndexOutOfBoundsException e) {
             id_cliente = "0";
-            id_recepcionista = "0";
+            id_recepcionista = 0;
             id_habitacion = "0";
             //create alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -387,7 +405,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
 
             try {
             Connection connection = DBConnection.getConnections();
-            if (clientSearchField.getText().isEmpty() || receptionistSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || start == null || end == null || cost.isEmpty()) {
+            if (clientSearchField.getText().isEmpty() || roomSearchField.getText().isEmpty() || start == null || end == null || cost.isEmpty()) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Error", "Las entradas de texto no pueden estar vacías!");
             } else {
                 String query;
@@ -405,7 +423,7 @@ public class ReceptionAddReservationController extends ReceptionDashboardControl
                 }
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, id_cliente);
-                preparedStatement.setString(2, id_recepcionista);
+                preparedStatement.setInt(2, id_recepcionista);
                 preparedStatement.setString(3, id_habitacion);
                 preparedStatement.setDate(4, Date.valueOf(start));
                 preparedStatement.setDate(5, Date.valueOf(end));

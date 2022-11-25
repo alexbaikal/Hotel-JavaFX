@@ -17,7 +17,11 @@ import java.util.Objects;
 import static com.example.prueba.Main.stage;
 import static com.example.prueba.PanelLoginController.screenController;
 
+
+
 public class ReceptionLoginController {
+    public static Integer idRecepcionista;
+
     public TextField receptionUsernameField;
     public PasswordField receptionPasswordField;
 
@@ -36,8 +40,10 @@ public class ReceptionLoginController {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, receptionUsername);
                 preparedStatement.setString(2, receptionPassword);
+
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
+                    idRecepcionista = resultSet.getInt("id_recepcionista");
                     screenController.removeScreen("receptionlogin");
                     stage.setWidth(1000);
                     stage.setHeight(500);
@@ -70,4 +76,5 @@ public class ReceptionLoginController {
         screenController.addScreen("panellogin", FXMLLoader.load(getClass().getResource( "/fxml/panel-login.fxml" )));
         screenController.activate("panellogin");
     }
+
 }
