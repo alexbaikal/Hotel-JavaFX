@@ -4,10 +4,21 @@ import backend.Utils;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
 import com.example.prueba.models.ReservaDataModel;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfPage;
+import com.itextpdf.text.pdf.PdfPageEvent;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -15,11 +26,13 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import org.w3c.dom.Document;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +40,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -350,6 +362,67 @@ public class ReceptionDashboardController implements Initializable {
         String fechaFinal = data.getFecha_final_string();
         Integer precio = data.getPrecio();
 
+        BarChart<String, Number> chart = new BarChart<>(new CategoryAxis(), new NumberAxis());
+        Random rng = new Random();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Data");
+        /*
+        for (int i = 1 ; i<=10; i++) {
+            series.getData().add(new XYChart.Data<>("Group "+i, rng.nextDouble()));
+        }*/
+
+        //get all reservation prices and dates and put them to XYChart
+        try {
+            PreparedStatement preparedStatement = connection().prepareStatement("SELECT costo, fecha_inicio FROM reserva");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                series.getData().add(new XYChart.Data<>(resultSet.getString(2), resultSet.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        chart.getData().add(series);
+
+        Button save = new Button("Save to pdf");
+        FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
+        save.setOnAction(e -> {
+            //generate PDF
+            File file = chooser.showSaveDialog(stage);
+            if (file != null) {
+                try {
+                    com.itextpdf.text.pdf.PdfDocument doc = new com.itextpdf.text.pdf.PdfDocument();
+                    com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+                    PdfWriter.getInstance(document, new FileOutputStream(file));
+                    document.open();
+                    document.add(new Paragraph("Factura de la reserva"));
+                    document.add(new Paragraph("Nombre del cliente: "+nombreCliente));
+                    document.add(new Paragraph("Nombre del recepcionista: "+nombreRecepcionista));
+                    document.add(new Paragraph("Numero de habitacion: "+numeroHabitacion));
+                    document.add(new Paragraph("Fecha de inicio: "+fechaInicio));
+                    document.add(new Paragraph("Fecha de finalizacion: "+fechaFinal));
+                    document.add(new Paragraph("Precio: "+precio));
+
+                    document.close();
+                    doc.close();
+
+
+                } catch (DocumentException | FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+
+
+
+        });
+
+        VBox root = new VBox(chart, save);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
 
 
 
