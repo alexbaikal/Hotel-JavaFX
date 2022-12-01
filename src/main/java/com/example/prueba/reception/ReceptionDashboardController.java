@@ -4,12 +4,13 @@ import backend.Utils;
 import com.example.prueba.PanelLoginController;
 import com.example.prueba.models.ClientModel;
 import com.example.prueba.models.ReservaDataModel;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfDocument;
+
 import com.itextpdf.text.pdf.PdfPage;
-import com.itextpdf.text.pdf.PdfPageEvent;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,11 +31,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -392,23 +395,34 @@ public class ReceptionDashboardController implements Initializable {
             File file = chooser.showSaveDialog(stage);
             if (file != null) {
                 try {
-                    com.itextpdf.text.pdf.PdfDocument doc = new com.itextpdf.text.pdf.PdfDocument();
+
+                  //  com.itextpdf.text.pdf.PdfDocument doc = new com.itextpdf.text.pdf.PdfDocument();
                     com.itextpdf.text.Document document = new com.itextpdf.text.Document();
                     PdfWriter.getInstance(document, new FileOutputStream(file));
                     document.open();
-                    document.add(new Paragraph("Factura de la reserva"));
+
+
+                    //add image
+                    Image image = new Image("https://imgur.com/5FOmooW.jpg");
+                    com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(image.getUrl());
+                    img.scaleAbsolute(100, 100);
+                    img.setAbsolutePosition(400, 700);
+                    document.add(img);
+
+                    document.add(new Paragraph("Factura de la reserva Nº"+data.getId_reserva()));
+
                     document.add(new Paragraph("Nombre del cliente: "+nombreCliente));
                     document.add(new Paragraph("Nombre del recepcionista: "+nombreRecepcionista));
                     document.add(new Paragraph("Numero de habitacion: "+numeroHabitacion));
                     document.add(new Paragraph("Fecha de inicio: "+fechaInicio));
                     document.add(new Paragraph("Fecha de finalizacion: "+fechaFinal));
-                    document.add(new Paragraph("Precio: "+precio));
+                    document.add(new Paragraph("Precio: "+precio+"€"));
+
 
                     document.close();
-                    doc.close();
 
 
-                } catch (DocumentException | FileNotFoundException ex) {
+                } catch (DocumentException | IOException ex) {
                     throw new RuntimeException(ex);
                 }
 
