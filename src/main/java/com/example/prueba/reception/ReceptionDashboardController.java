@@ -48,6 +48,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 import static com.example.prueba.Main.stage;
+import static com.example.prueba.PanelLoginController.screenController;
 import static com.example.prueba.admin.AdminDashboardController.connection;
 import static com.example.prueba.reception.ReceptionLoginController.currentReceptionUsername;
 
@@ -262,9 +263,9 @@ public class ReceptionDashboardController implements Initializable {
                                     try {
                                         stage.setTitle("✏Editar reserva");
                                         ReceptionAddReservationController.idReserva = data.getId_reserva();
-                                        PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
-                                        PanelLoginController.screenController.removeScreen("receptiondashboard");
-                                        PanelLoginController.screenController.activate("receptionaddreservation");
+                                        screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
+                                        screenController.removeScreen("receptiondashboard");
+                                        screenController.activate("receptionaddreservation");
                                         //pass variable to the next screen
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
@@ -365,63 +366,33 @@ public class ReceptionDashboardController implements Initializable {
         String fechaFinal = data.getFecha_final_string();
         Integer precio = data.getPrecio();
 
-        BarChart<String, Number> chart = new BarChart<>(new CategoryAxis(), new NumberAxis());
-        Random rng = new Random();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Data");
-        /*
-        for (int i = 1 ; i<=10; i++) {
-            series.getData().add(new XYChart.Data<>("Group "+i, rng.nextDouble()));
-        }*/
 
-        //get all reservation prices and dates and put them to XYChart
-        try {
-            PreparedStatement preparedStatement = connection().prepareStatement("SELECT costo, fecha_inicio FROM reserva");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                series.getData().add(new XYChart.Data<>(resultSet.getString(2), resultSet.getInt(1)));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        chart.getData().add(series);
-
-        Button save = new Button("Save to pdf");
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
-        save.setOnAction(e -> {
+
             //generate PDF
             File file = chooser.showSaveDialog(stage);
             if (file != null) {
                 try {
-
-                  //  com.itextpdf.text.pdf.PdfDocument doc = new com.itextpdf.text.pdf.PdfDocument();
                     com.itextpdf.text.Document document = new com.itextpdf.text.Document();
                     PdfWriter.getInstance(document, new FileOutputStream(file));
                     document.open();
-
-
                     //add image
                     Image image = new Image("https://imgur.com/5FOmooW.jpg");
                     com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(image.getUrl());
                     img.scaleAbsolute(100, 100);
                     img.setAbsolutePosition(400, 700);
                     document.add(img);
-
                     document.add(new Paragraph("Factura de la reserva Nº"+data.getId_reserva()));
-
+                    document.add(new Paragraph("CIF: 12345678A"));
                     document.add(new Paragraph("Nombre del cliente: "+nombreCliente));
+                    document.add(new Paragraph("DNI: 12345678A"));
                     document.add(new Paragraph("Nombre del recepcionista: "+nombreRecepcionista));
                     document.add(new Paragraph("Numero de habitacion: "+numeroHabitacion));
                     document.add(new Paragraph("Fecha de inicio: "+fechaInicio));
                     document.add(new Paragraph("Fecha de finalizacion: "+fechaFinal));
                     document.add(new Paragraph("Precio: "+precio+"€"));
-
-
                     document.close();
-
-
                 } catch (DocumentException | IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -431,12 +402,7 @@ public class ReceptionDashboardController implements Initializable {
 
 
 
-        });
 
-        VBox root = new VBox(chart, save);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
 
 
 
@@ -516,9 +482,9 @@ public class ReceptionDashboardController implements Initializable {
                                     try {
                                         stage.setTitle("✏Editar cliente");
                                         ReceptionAddClientController.idCliente = data.getId();
-                                        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
-                                        PanelLoginController.screenController.removeScreen("receptiondashboard");
-                                        PanelLoginController.screenController.activate("receptionaddclient");
+                                        screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
+                                        screenController.removeScreen("receptiondashboard");
+                                        screenController.activate("receptionaddclient");
                                         //pass variable to the next screen
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
@@ -602,25 +568,71 @@ public class ReceptionDashboardController implements Initializable {
     public void LogOut() {
         currentReceptionUsername = "";
         stage.setTitle("Panel Login");
-        PanelLoginController.screenController.removeScreen("receptiondashboard");
-        PanelLoginController.screenController.removeScreen("receptionlogin");
+        screenController.removeScreen("receptiondashboard");
+        screenController.removeScreen("receptionlogin");
         stage.setWidth(400);
         stage.setHeight(400);
-        PanelLoginController.screenController.activate("panellogin");
+        screenController.activate("panellogin");
     }
 
     public void AddClient() throws IOException {
         stage.setTitle("➕Añadir cliente");
-        PanelLoginController.screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
-        PanelLoginController.screenController.removeScreen("receptiondashboard");
-        PanelLoginController.screenController.activate("receptionaddclient");
+        screenController.addScreen("receptionaddclient", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addclient.fxml"))));
+        screenController.removeScreen("receptiondashboard");
+        screenController.activate("receptionaddclient");
     }
 
     public void AddReservation() throws IOException {
         stage.setTitle("➕Añadir reserva");
-        PanelLoginController.screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
-        PanelLoginController.screenController.removeScreen("receptiondashboard");
-        PanelLoginController.screenController.activate("receptionaddreservation");
+        screenController.addScreen("receptionaddreservation", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-addreservation.fxml"))));
+        screenController.removeScreen("receptiondashboard");
+        screenController.activate("receptionaddreservation");
+    }
+
+    public void ShowStatistics(ActionEvent actionEvent) {
+
+        BarChart<String, Number> chart = new BarChart<>(new CategoryAxis(), new NumberAxis());
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Facturación/Día");
+        /*
+        for (int i = 1 ; i<=10; i++) {
+            series.getData().add(new XYChart.Data<>("Group "+i, rng.nextDouble()));
+        }*/
+
+        //get all reservation prices and dates and put them to XYChart
+        try {
+            PreparedStatement preparedStatement = connection().prepareStatement("SELECT costo, fecha_inicio FROM reserva");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                series.getData().add(new XYChart.Data<>(resultSet.getString(2), resultSet.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //button to go back to reception-dashboard
+        Button button = new Button("Volver");
+        button.setOnAction(event -> {
+            stage.setTitle("Panel de recepción");
+            screenController.removeScreen("receptionstatistics");
+            try {
+                screenController.addScreen("receptiondashboard", FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-dashboard.fxml"))));
+                screenController.activate("receptiondashboard");
+                stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/reception-dashboard.fxml")))));
+                stage.show();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        chart.getData().add(series);
+
+
+        VBox root = new VBox(chart, button);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
     }
 }
 

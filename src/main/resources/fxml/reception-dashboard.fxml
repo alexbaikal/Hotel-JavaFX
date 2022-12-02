@@ -63,6 +63,7 @@
     <FlowPane>
         <Button mnemonicParsing="false" onAction="#AddClient" text="➕Añadir cliente" />
       <Button mnemonicParsing="false" onAction="#AddReservation" text="➕Añadir reserva" />
+      <Button mnemonicParsing="false" onAction="#ShowStatistics" text="Ver estadísticas" />
 
         <Button mnemonicParsing="false" onAction="#LogOut" text="➡Cerrar sesión" />
     </FlowPane>
